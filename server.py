@@ -2,9 +2,11 @@
 #   server.py
 #   This file is the web server, it drives the application.
 
-from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response, request
+from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
 import sqlite3 as lite
 from datetime import datetime as time
+
+from lib.auth import requires_auth
 
 app = Flask(__name__)
 
@@ -18,7 +20,7 @@ app.config.update(DEBUG=True)
 # Schema
 #   Add table names as keys and column names as elements of an array
 schema = {
-  'visit': 
+  'visit':
     [
       "ip",
       "time"
@@ -57,10 +59,15 @@ def get_visits():
 # Routes
 #   The actual routes you can visit in your app
 @app.route("/")
+@requires_auth
 def index():
   record_visit(request)
   return render_template('index.html', time=get_time(), visits=get_visits())
 
+@app.route("/search")
+@requires_auth
+def search():
+  return render_template('search.html')
 
 # Serve Static Assets
 #   Drop any assets (images, js, css) into the assets folder or subfolders and voila
