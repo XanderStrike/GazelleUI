@@ -1,16 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
-  <table class="artist-info">
-    <tr>
-      <td class="artist-image">
-        <img src="{{ results.image }}" />
-      </td>
-      <td>
-        <h2>{{ results.name | safe }}</h2>
-        <p>{{ results.body | safe}}</p>
-      </td>
-    </tr>
-  </table>
+  <div class="row">
+    <div class="three columns">
+      <img src="{{ results.image }}" width='100%'/>
+    </div>
+    <div class="nine columns">
+      <h2>{{ results.name | safe }}</h2>
+      <p>{{ results.body | safe}}</p>
+    </div>
+  </div>
 
   <a class="js-show-all button">All</a>
   <a class="js-only-albums button">Albums</a>
@@ -31,22 +29,23 @@
         <tr>
           <th>Format</th>
           <th>Files</th>
-          <th>Size</th>
-          <th>Added</th>
-          <th>Snatched</th>
+          <th class='small-up-column'>Size</th>
+          <th class='medium-up-column'>Added</th>
+          <th class='medium-up-column'>Snatched</th>
           <th>Seeders</th>
-          <th>Leechers</th>
+          <th class='medium-up-column'>Leechers</th>
+          <th></th>
         </tr>
         {% for torrent in res.torrent %}
           <tr>
             <td>{{ torrent.format }} {{ torrent.encoding }} </td>
             <td>{{ torrent.fileCount }}</td>
-            <td>{{ torrent.size }}</td>
-            <td>{{ torrent.time }}</td>
-            <td>{{ torrent.snatched }}</td>
+            <td class='small-up-column'>{{ torrent.size }}</td>
+            <td class='medium-up-column'>{{ torrent.time }}</td>
+            <td class='medium-up-column'>{{ torrent.snatched }}</td>
             <td>{{ torrent.seeders }}</td>
-            <td>{{ torrent.leechers }}</td>
-            <td><a href="/want?id={{ torrent.id }}" class="js-download">Download</a></td>
+            <td class='medium-up-column'>{{ torrent.leechers }}</td>
+            <td><a href="/want?id={{ torrent.id }}" class="js-download button">Download</a></td>
           </tr>
         {% endfor %}
       </table>

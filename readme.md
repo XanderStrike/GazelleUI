@@ -1,3 +1,7 @@
 # whatui
 
-don't use this yet
+prerequisites
+
+* wget 
+* flask
+* whatapi

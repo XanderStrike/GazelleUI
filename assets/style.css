@@ -1,78 +1,23 @@
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 200;
-  src: local('Source Sans Pro ExtraLight'), local('SourceSansPro-ExtraLight'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/toadOcfmlt9b38dHJxOBGLhZfOo4eSOlrve6pGrXHAo.woff) format('woff');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/toadOcfmlt9b38dHJxOBGIPZSf8Ud0kNoe3bGnF7K24.woff) format('woff');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBBHWFfxJXS04xYOz0jw624.woff) format('woff');
+.small-up-column {
+  display: none;
 }
 
-body {
-  max-width:1000px;
-  margin:0 auto;
-  padding-bottom: 40px;
-  padding-left: 10px;
-  padding-right: 10px;
+.medium-up-column {
+  display: none;
 }
 
-h1, h2, p {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 300;
+@media (min-width: 550px) {
+  .small-up-column {
+    display: table-cell;
+  }
 }
 
-table {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 300;
-  width: 100%;
-}
-
-table th {
-  text-align: left;
-}
-
-img {
-  max-width: 100%;
-}
-
-input {
-  font-family: 'Source Sans Pro', sans-serif;
-  width: 100%;
-  height: 20px;
-  font-size: 19px;
+@media (min-width: 750px) {
+  .medium-up-column {
+    display: table-cell;
+  }
 }
 
 .u-hidden {
   display: none;
-}
-
-.artist-info {
-  width: 100%;
-}
-
-.artist-image {
-  width: 20%;
-  padding-right: 20px;
-  vertical-align: top;
-}
-
-.table-action {
-  width: 10%;
-  padding-left: 20px;
-}
-
-.button {
-  padding: 10px 15px;
-  background: #4479BA;
-  color: #FFF;
-  cursor: pointer;
 }

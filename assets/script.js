@@ -2,6 +2,7 @@ $('.js-show-all').click(function() {
   $('.js-release').each(function() {
     $(this).removeClass('u-hidden');
   });
+  return false;
 });
 
 function filter_release_type(release_type) {
@@ -17,6 +18,7 @@ function filter_release_type(release_type) {
 function bind_button(type, number) {
   $('.js-only-' + type).click(function() {
     filter_release_type(number);
+    return false;
   });
 }
 
@@ -38,3 +40,5 @@ $('.js-download').click(function() {
   });
   return false;
 });
+
+console.log('loosadfasdf');

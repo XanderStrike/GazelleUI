@@ -1,20 +1,27 @@
 <!doctype html>
 <head>
-<title>WhatUI</title>
-<link href="/assets/style.css" rel="stylesheet">
+<head>
+  <meta charset="utf-8">
+  <title>WhatUI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="assets/normalize.css">
+  <link rel="stylesheet" href="assets/skeleton.css">
+  <link href="/assets/style.css" rel="stylesheet">
 </head>
 <body>
-  <h1>WhatUI</h1>
-
-  <form action="/search" method="get">
-    <table>
-      <tr>
-        <td><input name="q"></form></td>
-        <td class="table-action"><input type="submit" value="Search Artists"></td>
-      </tr>
-    </table>
-  </form>
-  {% block body %}{% endblock %}
+    <div class="container">
+    <h1>WhatUI</h1>
+    <form action="/search" method="get">
+      <div class="row">
+        <div class="six columns">
+          <input class="u-full-width" type="search" placeholder="Death Cab for Cutie" name="q">
+          <input type="submit" value="Search Artists">
+        </div>
+      </div>
+    </form>
+    {% block body %}{% endblock %}
+  </div>
 
   <script src="/assets/jquery-1.11.3.min.js"></script>
   <script src="/assets/script.js"></script>
