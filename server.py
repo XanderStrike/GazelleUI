@@ -1,6 +1,8 @@
 # WhatUI
 #   https://github.com/XanderStrike/WhatUI
 
+import os
+
 # === Settings ===
 
 # Access
@@ -9,6 +11,7 @@ PORT = 2020
 BIND = 'localhost'
 
 # Where to save .torrent files
+#   Must end in a slash
 DOWNLOAD_PATH = 'torrents/'
 
 # WhatCD credentials
@@ -20,7 +23,6 @@ PASSWORD = os.environ['WHAT_PASSWORD']
 # ================
 
 import sys
-import os
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
 import sqlite3 as lite
 from datetime import datetime as time
@@ -109,7 +111,7 @@ def search():
 def want():
   torrent_id = request.args['id']
   download_link = 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + apihandle.authkey + '&torrent_pass=' + apihandle.passkey
-  os.system("wget \"" + download_link + "\" -O " + torrent_id + ".torrent")
+  os.system("wget \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
   return "ok"
 
 @app.route("/torrent")
