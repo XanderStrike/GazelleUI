@@ -1,19 +1,9 @@
-.tiny-up-column {
-  display: none;
-}
-
 .small-up-column {
   display: none;
 }
 
 .medium-up-column {
   display: none;
-}
-
-@media (min-width: 400px) {
-  .tiny-up-column {
-    display: table-cell;
-  }
 }
 
 @media (min-width: 550px) {
