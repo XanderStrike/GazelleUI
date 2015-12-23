@@ -1,6 +1,23 @@
-# Flask Starter
-#   server.py
-#   This file is the web server, it drives the application.
+# WhatUI
+#   https://github.com/XanderStrike/WhatUI
+
+# === Settings ===
+
+# Access
+#   Set to 0.0.0.0 to make available to the internet
+PORT = 2020
+BIND = 'localhost'
+
+# Where to save .torrent files
+DOWNLOAD_PATH = 'torrents/'
+
+# WhatCD credentials
+#   Run with WHAT_USERNAME=name WHAT_PASSWORD=pass python server.py
+#   Or change these values
+USERNAME = os.environ['WHAT_USERNAME']
+PASSWORD = os.environ['WHAT_PASSWORD']
+
+# ================
 
 import sys
 import os
@@ -12,15 +29,12 @@ import whatapi
 from lib.auth import requires_auth
 
 app = Flask(__name__)
-
-
-# Settings
-
-PORT = 2020
 app.config.update(DEBUG=True)
 
+
+# Try to login to whatcd
 try:
-  apihandle = whatapi.WhatAPI(username='xanderstrike', password=os.environ['WHAT_PASSWORD'])
+  apihandle = whatapi.WhatAPI(username=USERNAME, password=PASSWORD)
 except whatapi.whatapi.LoginException:
   print "Username and password not set. Set them in server.py"
   sys.exit()
@@ -49,7 +63,6 @@ except lite.OperationalError:
 
 
 # Methods
-#   The methods you use in your app
 def get_time():
   return str(time.now())
 
@@ -77,7 +90,6 @@ def get_torrent_results(torrent_id):
     # return "an error"
 
 # Routes
-#   The actual routes you can visit in your app
 @app.route("/")
 @requires_auth
 def index():
