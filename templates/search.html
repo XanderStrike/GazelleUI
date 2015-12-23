@@ -1,8 +1,55 @@
 {% extends "layout.html" %}
 {% block body %}
+  <table class="artist-info">
+    <tr>
+      <td class="artist-image">
+        <img src="{{ results.image }}" />
+      </td>
+      <td>
+        <h2>{{ results.name | safe }}</h2>
+        <p>{{ results.body | safe}}</p>
+      </td>
+    </tr>
+  </table>
 
-  <h1>Search</h1>
+  <a class="js-show-all button">All</a>
+  <a class="js-only-albums button">Albums</a>
+  <a class="js-only-eps button">Eps</a>
+  <a class="js-only-singles button">Singles</a>
+  <a class="js-only-demos button">Demos</a>
+  <a class="js-only-anthologies button">Anthologies</a>
+  <a class="js-only-compilations button">Compilations</a>
+  <a class="js-only-soundtracks button">Soundtracks</a>
+  <a class="js-only-live button">Live Albums</a>
+  <a class="js-only-remixes button">Remixes</a>
 
-  <p>This is the home page of your flask app. It is the index.html template wrapped in layout.html</p>
-
+  {% for res in results.torrentgroup %}
+    <div class="js-release js-release-type-{{ res.releaseType }}">
+      <h2>{{ res.groupYear }} - {{ res.groupName | safe }}</h2>
+      <!-- <p>{{ res.releaseType }}</p> -->
+      <table>
+        <tr>
+          <th>Format</th>
+          <th>Files</th>
+          <th>Size</th>
+          <th>Added</th>
+          <th>Snatched</th>
+          <th>Seeders</th>
+          <th>Leechers</th>
+        </tr>
+        {% for torrent in res.torrent %}
+          <tr>
+            <td>{{ torrent.format }} {{ torrent.encoding }} </td>
+            <td>{{ torrent.fileCount }}</td>
+            <td>{{ torrent.size }}</td>
+            <td>{{ torrent.time }}</td>
+            <td>{{ torrent.snatched }}</td>
+            <td>{{ torrent.seeders }}</td>
+            <td>{{ torrent.leechers }}</td>
+            <td><a href="/want?id={{ torrent.id }}" class="js-download">Download</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% endfor %}
 {% endblock %}

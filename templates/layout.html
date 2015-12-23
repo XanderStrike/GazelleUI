@@ -1,8 +1,21 @@
 <!doctype html>
 <head>
-<title>Basic Flask App</title>
+<title>WhatUI</title>
 <link href="/assets/style.css" rel="stylesheet">
 </head>
 <body>
+  <h1>WhatUI</h1>
+
+  <form action="/search" method="get">
+    <table>
+      <tr>
+        <td><input name="q"></form></td>
+        <td class="table-action"><input type="submit" value="Search Artists"></td>
+      </tr>
+    </table>
+  </form>
   {% block body %}{% endblock %}
+
+  <script src="/assets/jquery-1.11.3.min.js"></script>
+  <script src="/assets/script.js"></script>
 </body>
