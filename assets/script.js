@@ -40,5 +40,3 @@ $('.js-download').click(function() {
   });
   return false;
 });
-
-console.log('loosadfasdf');
