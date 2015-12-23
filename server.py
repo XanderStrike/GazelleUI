@@ -111,7 +111,7 @@ def search():
 def want():
   torrent_id = request.args['id']
   download_link = 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + apihandle.authkey + '&torrent_pass=' + apihandle.passkey
-  os.system("wget \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
+  os.system("wget -bq \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
   return "ok"
 
 @app.route("/torrent")
