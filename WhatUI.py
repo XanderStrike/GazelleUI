@@ -2,6 +2,7 @@
 #   https://github.com/XanderStrike/WhatUI
 
 import os
+import sys
 
 # === Settings ===
 
@@ -17,12 +18,15 @@ DOWNLOAD_PATH = 'torrents/'
 # WhatCD credentials
 #   Run with WHAT_USERNAME=name WHAT_PASSWORD=pass python server.py
 #   Or change these values
-USERNAME = os.environ['WHAT_USERNAME']
-PASSWORD = os.environ['WHAT_PASSWORD']
+try:
+  USERNAME = os.environ['WHAT_USERNAME']
+  PASSWORD = os.environ['WHAT_PASSWORD']
+except:
+  print "Set the WHAT_USERNAME and WHAT_PASSWORD environment variables."
+  sys.exit()
 
 # ================
 
-import sys
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
 import whatapi
 
@@ -36,7 +40,7 @@ app.config.update(DEBUG=True)
 try:
   apihandle = whatapi.WhatAPI(username=USERNAME, password=PASSWORD)
 except whatapi.whatapi.LoginException:
-  print "Username and password not set. Set them in server.py"
+  print "Username and password incorrect"
   sys.exit()
 
 
@@ -78,4 +82,4 @@ def send_assets(filename):
 
 # It's Go Time
 if __name__ == "__main__":
-  app.run(host=BIND, port=PORT, threaded=True)
+  app.run(host=BIND, port=PORT)
