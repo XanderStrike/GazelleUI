@@ -36,7 +36,29 @@ bind_button('bootlegs', 14);
 $('.js-download').click(function() {
   $elem = $(this);
   $.get($elem.attr('href'), function( data ) {
-    $elem.replaceWith('Fetched!');
+    $elem.replaceWith(data);
   });
+  return false;
+});
+
+$('.js-more-info').click(function() {
+  $elem = $(this);
+  group_id = $elem.attr('groupId');
+  if (!$.trim( $('.js-more-info-' + $elem.attr('groupId')).html() ).length) {
+    $.get($elem.attr('href'), function( data ) {
+      $('.js-more-info-' + $elem.attr('groupId')).html(data);
+    });
+  }
+  $elem.hide();
+  $('.js-more-info-' + $elem.attr('groupId')).fadeIn();
+  $('.js-less-info[groupId=' + group_id + ']').show();
+  return false;
+});
+
+$('.js-less-info').click(function() {
+  $elem = $(this);
+  $elem.hide();
+  $('.js-more-info[groupId=' + group_id + ']').show();
+  $('.js-more-info-' + $elem.attr('groupId')).fadeOut();
   return false;
 });

@@ -71,7 +71,14 @@ def want():
   torrent_id = request.args['id']
   download_link = 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + apihandle.authkey + '&torrent_pass=' + apihandle.passkey
   os.system("wget -bq \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
-  return "ok"
+  return "Fetched!"
+
+@app.route("/group_info")
+@requires_auth
+def group_info():
+  group_id = request.args['id']
+  results = apihandle.request('torrentgroup', id=group_id)['response']['group']
+  return render_template('group_info.html', group_info=results)
 
 
 # Serve Static Assets

@@ -24,7 +24,10 @@
   {% for res in results.torrentgroup %}
     <div class="js-release js-release-type-{{ res.releaseType }}">
       <h2>{{ res.groupYear }} - {{ res.groupName | safe }}</h2>
-      <!-- <p>{{ res.releaseType }}</p> -->
+      <a href="/group_info?id={{ res.groupId }}" groupId="{{ res.groupId }}" class="js-more-info">More Info</a>
+      <a href="" groupId="{{ res.groupId }}" class="js-less-info u-hidden">Less Info</a>
+      <div class="js-more-info-{{ res.groupId }}"></div>
+
       <table class="u-full-width">
         <thead>
           <tr>
