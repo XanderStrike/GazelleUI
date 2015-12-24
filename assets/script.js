@@ -45,6 +45,14 @@ $('.js-desc-less-link').click(function() {
   return false;
 });
 
+// Expand Torrents
+$('.js-torrent-more-link').click(function() {
+  $elem = $(this);
+  $elem.hide();
+  $('.js-torrent-container-' + $elem.attr('groupId')).css('max-height', 'none');
+  return false;
+});
+
 // Release Info
 $('.js-more-info').click(function() {
   $elem = $(this);
@@ -55,7 +63,7 @@ $('.js-more-info').click(function() {
     });
   }
   $elem.hide();
-  $('.js-more-info-' + $elem.attr('groupId')).fadeIn();
+  $('.js-more-info-' + $elem.attr('groupId')).show();
   $('.js-less-info[groupId=' + group_id + ']').show();
   return false;
 });
@@ -64,6 +72,6 @@ $('.js-less-info').click(function() {
   $elem = $(this);
   $elem.hide();
   $('.js-more-info[groupId=' + group_id + ']').show();
-  $('.js-more-info-' + $elem.attr('groupId')).fadeOut();
+  $('.js-more-info-' + $elem.attr('groupId')).hide();
   return false;
 });

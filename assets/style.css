@@ -35,3 +35,8 @@ table {
   text-align: center;
   margin-bottom: 20px;
 }
+
+.torrent-container {
+  max-height: 275px;
+  overflow: hidden;
+}

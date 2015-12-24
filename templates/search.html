@@ -38,34 +38,41 @@
       <a href="" groupId="{{ res.groupId }}" class="js-less-info u-hidden">Less Info</a>
       <div class="js-more-info-{{ res.groupId }}"></div>
 
-      <table class="u-full-width">
-        <thead>
-          <tr>
-            <th>Format</th>
-            <th>Files</th>
-            <th class='small-up-column'>Size</th>
-            <th class='medium-up-column'>Added</th>
-            <th class='medium-up-column'>Snatched</th>
-            <th class='small-up-column'>Seeders</th>
-            <th class='medium-up-column'>Leechers</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for torrent in res.torrent %}
+      <div class="torrent-container js-torrent-container-{{ res.groupId }}">
+        <table class="u-full-width">
+          <thead>
             <tr>
-              <td>{{ torrent.format }} {{ torrent.encoding }} </td>
-              <td>{{ torrent.fileCount }}</td>
-              <td class='small-up-column'>{{ torrent.size }}</td>
-              <td class='medium-up-column'>{{ torrent.time }}</td>
-              <td class='medium-up-column'>{{ torrent.snatched }}</td>
-              <td class='small-up-column'>{{ torrent.seeders }}</td>
-              <td class='medium-up-column'>{{ torrent.leechers }}</td>
-              <td><a href="/want?id={{ torrent.id }}" class="js-download button">Download</a></td>
+              <th>Format</th>
+              <th>Files</th>
+              <th class='small-up-column'>Size</th>
+              <th class='medium-up-column'>Added</th>
+              <th class='medium-up-column'>Snatched</th>
+              <th class='small-up-column'>Seeders</th>
+              <th class='medium-up-column'>Leechers</th>
+              <th></th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {% for torrent in res.torrent %}
+              <tr>
+                <td>{{ torrent.format }} {{ torrent.encoding }} </td>
+                <td>{{ torrent.fileCount }}</td>
+                <td class='small-up-column'>{{ torrent.size }}</td>
+                <td class='medium-up-column'>{{ torrent.time }}</td>
+                <td class='medium-up-column'>{{ torrent.snatched }}</td>
+                <td class='small-up-column'>{{ torrent.seeders }}</td>
+                <td class='medium-up-column'>{{ torrent.leechers }}</td>
+                <td><a href="/want?id={{ torrent.id }}" class="js-download button">Download</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if res.torrent.__len__() > 3 %}
+        <div class="u-full-width desc-more">
+          <a href="" groupId="{{ res.groupId }}" class="js-torrent-more-link">More</a>
+        </div>
+      {% endif %}
     </div>
   {% endfor %}
 {% endblock %}
