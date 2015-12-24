@@ -25,3 +25,13 @@
 table {
   max-width: 100%;
 }
+
+.artist-desc {
+  max-height: 190px;
+  overflow: hidden;
+}
+
+.desc-more {
+  text-align: center;
+  margin-bottom: 20px;
+}

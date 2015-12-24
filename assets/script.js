@@ -1,38 +1,27 @@
-$('.js-show-all').click(function() {
-  $('.js-release').each(function() {
-    $(this).removeClass('u-hidden');
-  });
-  return false;
-});
-
-function filter_release_type(release_type) {
-  $('.js-release').each(function() {
-    if ($(this).hasClass('js-release-type-' + release_type)) {
-      $(this).removeClass('u-hidden');
+// Release Filters
+function do_filters() {
+  var regex = new RegExp($('.js-text-filter').val(), "i");
+  var rows = $('.js-release');
+  var type = $('.js-type-filter').val();
+  rows.each(function (index) {
+    title = $(this).children(".js-title").html()
+    if (title.search(regex) != -1 && (type == '0' || $(this).hasClass("js-release-type-" + type))) {
+      $(this).show();
     } else {
-      $(this).addClass('u-hidden');
+      $(this).hide();
     }
   });
 }
 
-function bind_button(type, number) {
-  $('.js-only-' + type).click(function() {
-    filter_release_type(number);
-    return false;
-  });
-}
+$('.js-type-filter').change(function() {
+  do_filters();
+})
 
-bind_button('albums', 1);
-bind_button('anthologies', 6);
-bind_button('compilations', 7);
-bind_button('demos', 23);
-bind_button('singles', 9);
-bind_button('soundtracks', 3);
-bind_button('live', 11);
-bind_button('remixes', 13);
-bind_button('eps', 5);
-bind_button('bootlegs', 14);
+$('.js-text-filter').keyup(function() {
+  do_filters();
+});
 
+// Fetch
 $('.js-download').click(function() {
   $elem = $(this);
   $.get($elem.attr('href'), function( data ) {
@@ -41,6 +30,22 @@ $('.js-download').click(function() {
   return false;
 });
 
+// Artist Info
+$('.js-desc-more-link').click(function() {
+  $('.js-artist-desc').css('max-height', 'none');
+  $('.js-desc-less-link').show();
+  $(this).hide();
+  return false;
+});
+
+$('.js-desc-less-link').click(function() {
+  $('.js-artist-desc').css('max-height', '190px');
+  $('.js-desc-more-link').show();
+  $(this).hide();
+  return false;
+});
+
+// Release Info
 $('.js-more-info').click(function() {
   $elem = $(this);
   group_id = $elem.attr('groupId');

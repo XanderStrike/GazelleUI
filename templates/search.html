@@ -5,25 +5,35 @@
       <img src="{{ results.image }}" width='100%'/>
     </div>
     <div class="nine columns">
-      <h2>{{ results.name | safe }}</h2>
-      <p>{{ results.body | safe}}</p>
+      <div class="artist-desc js-artist-desc">
+        <h2>{{ results.name | safe }}</h2>
+        <p>{{ results.body | safe}}</p>
+      </div>
+      <div class="u-full-width desc-more">
+        <a href="" class="js-desc-more-link">More</a>
+        <a href="" class="js-desc-less-link u-hidden">Less</a>
+      </div>
     </div>
   </div>
 
-  <a class="js-show-all button">All</a>
-  <a class="js-only-albums button">Albums</a>
-  <a class="js-only-eps button">Eps</a>
-  <a class="js-only-singles button">Singles</a>
-  <a class="js-only-demos button">Demos</a>
-  <a class="js-only-anthologies button">Anthologies</a>
-  <a class="js-only-compilations button">Compilations</a>
-  <a class="js-only-soundtracks button">Soundtracks</a>
-  <a class="js-only-live button">Live Albums</a>
-  <a class="js-only-remixes button">Remixes</a>
+  <select class="u-full-width js-type-filter">
+    <option value="0">All Releases</option>
+    <option value="1">Albums</a>
+    <option value="5">Eps</a>
+    <option value="9">Singles</a>
+    <option value="23">Demos</a>
+    <option value="6">Anthologies</a>
+    <option value="7">Compilations</a>
+    <option value="3">Soundtracks</a>
+    <option value="11">Live Albums</a>
+    <option value="13">Remixes</a>
+  </select>
+
+  <input type="search" class="u-full-width js-text-filter" placeholder="Filter by title">
 
   {% for res in results.torrentgroup %}
     <div class="js-release js-release-type-{{ res.releaseType }}">
-      <h2>{{ res.groupYear }} - {{ res.groupName | safe }}</h2>
+      <h2 class="js-title">{{ res.groupYear }} - {{ res.groupName | safe }}</h2>
       <a href="/group_info?id={{ res.groupId }}" groupId="{{ res.groupId }}" class="js-more-info">More Info</a>
       <a href="" groupId="{{ res.groupId }}" class="js-less-info u-hidden">Less Info</a>
       <div class="js-more-info-{{ res.groupId }}"></div>
