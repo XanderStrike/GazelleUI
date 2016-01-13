@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
+
+{% if message != None %}
+  <p class="alert {{ message_class }}">{{ message }}</p>
+{% endif %}
+
 <div class="row">
   <div class="six columns">
     <h4>WhatUI Credentials</h4>

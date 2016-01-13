@@ -30,9 +30,13 @@ def init_db():
 
 
 def update(params):
-  conn = lite.connect(DB)
-  conn.cursor().execute('insert or replace into settings(key, value_1, value_2) values ("' + params['setting'] + '", "' + params['value_1'] + '", "' + params['value_2'] + '")')
-  conn.commit()
+  try:
+    conn = lite.connect(DB)
+    conn.cursor().execute('insert or replace into settings(key, value_1, value_2) values ("' + params['setting'] + '", "' + params['value_1'] + '", "' + params['value_2'] + '")')
+    conn.commit()
+    return {'class': 'alert-success', 'message': 'Settings updated successfully.'}
+  except:
+    return {'class': 'alert-error', 'message': 'Sorry but something went wrong! Check the log for details.'}
 
 def get_all():
   con = lite.connect(DB)

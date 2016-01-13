@@ -7,7 +7,7 @@ def check_auth(username, password):
     password combination is valid.
     """
     creds = settings.get('webui_credentials')
-    return creds[1] == '' or (username == creds[1] and password == creds[2])
+    return username == creds[1] and password == creds[2]
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
@@ -20,7 +20,11 @@ def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
+        if not needs_auth() and (not auth or not check_auth(auth.username, auth.password)):
             return authenticate()
         return f(*args, **kwargs)
     return decorated
+
+def needs_auth():
+    creds = settings.get('webui_credentials')
+    return creds[1] == None or creds[1] == ''

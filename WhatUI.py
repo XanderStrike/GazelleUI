@@ -32,7 +32,6 @@ settings.init_db()
 # Try to login to whatcd
 try:
   setting = settings.get('what_credentials')
-  print setting
   apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2])
 except:
   print "What.cd username and password incorrect"
@@ -51,6 +50,9 @@ def get_artist_results(query):
 @app.route("/")
 @requires_auth
 def index():
+  setting = settings.get('what_credentials')
+  if setting[1] == None or setting[1] == '':
+    return render_template('settings.html', settings=settings.get_all(), message="Please set your whatcd username and password.", message_class="alert-error")
   return render_template('index.html')
 
 @app.route("/search")
@@ -78,10 +80,10 @@ def group_info():
 @app.route("/settings", methods=['GET', 'POST'])
 @requires_auth
 def settings_path():
-  output = ''
+  output = {'message':None,'class':None}
   if request.method == 'POST':
     output = settings.update(request.form)
-  return render_template('settings.html', settings=settings.get_all(), output=output)
+  return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'])
 
 
 # Serve Static Assets
