@@ -29,19 +29,29 @@ app.config.update(DEBUG=True)
 # Initialize Settings
 settings.init_db()
 
+
 # Try to login to whatcd
-try:
-  setting = settings.get('what_credentials')
-  apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2])
-except:
-  print "What.cd username and password incorrect"
-  print "Add them on the settings page then restart!"
+apihandle = None
+def what_handle():
+  global apihandle
+  try:
+    setting = settings.get('what_credentials')
+    if apihandle != None:
+      return apihandle
+    apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2])
+    return apihandle
+  except:
+    raise Exception('Something went wrong connecting to WhatCD. Ensure that it is up and running, and that your credentials are correct.')
+
+def bust_handle_cache():
+  global apihandle
+  apihandle = None
 
 
 # Methods
 def get_artist_results(query):
   try:
-    return apihandle.request('artist', artistname=query)['response']
+    return what_handle().request('artist', artistname=query)['response']
   except whatapi.whatapi.RequestException:
     return "an error"
 
@@ -66,7 +76,7 @@ def search():
 @requires_auth
 def want():
   torrent_id = request.args['id']
-  download_link = 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + apihandle.authkey + '&torrent_pass=' + apihandle.passkey
+  download_link = 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + what_handle().authkey + '&torrent_pass=' + what_handle().passkey
   os.system("wget -bq \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
   return "Fetched!"
 
@@ -74,7 +84,7 @@ def want():
 @requires_auth
 def group_info():
   group_id = request.args['id']
-  results = apihandle.request('torrentgroup', id=group_id)['response']['group']
+  results = what_handle().request('torrentgroup', id=group_id)['response']['group']
   return render_template('group_info.html', group_info=results)
 
 @app.route("/settings", methods=['GET', 'POST'])
@@ -83,6 +93,7 @@ def settings_path():
   output = {'message':None,'class':None}
   if request.method == 'POST':
     output = settings.update(request.form)
+    bust_handle_cache()
   return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'])
 
 
