@@ -7,18 +7,19 @@
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="assets/normalize.css">
   <link rel="stylesheet" href="assets/skeleton.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link href="/assets/style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-    <h1>WhatUI</h1>
+  <div class="container">
+    <h1>
+      <a href="/" class="brand-link">WhatUI</a>
+      <a href="/settings" class="settings-link"><i class="fa fa-cog"></i></a>
+    </h1>
     <form action="/search" method="get">
       <div class="row">
-        <div class="nine columns">
-          <input class="u-full-width" type="search" placeholder="The Evan Robbins Experience" name="q">
-        </div>
-        <div class="three columns">
-          <input class="u-full-width" type="submit" value="Search Artists">
+        <div class="twelve columns">
+          <input style="text-align:center;" class="u-full-width" type="search" placeholder="Search Artists" name="q">
         </div>
       </div>
     </form>

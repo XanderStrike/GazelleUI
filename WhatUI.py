@@ -15,33 +15,28 @@ BIND = '0.0.0.0'
 #   Must end in a slash
 DOWNLOAD_PATH = 'torrents/'
 
-# WhatCD credentials
-#   Run with WHAT_USERNAME=name WHAT_PASSWORD=pass python server.py
-#   Or change these values
-try:
-  USERNAME = os.environ['WHAT_USERNAME']
-  PASSWORD = os.environ['WHAT_PASSWORD']
-except:
-  print "Set the WHAT_USERNAME and WHAT_PASSWORD environment variables."
-  sys.exit()
-
 # ================
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
 import whatapi
 
 from lib.auth import requires_auth
+import lib.settings as settings
 
 app = Flask(__name__)
 app.config.update(DEBUG=True)
 
+# Initialize Settings
+settings.init_db()
 
 # Try to login to whatcd
 try:
-  apihandle = whatapi.WhatAPI(username=USERNAME, password=PASSWORD)
-except whatapi.whatapi.LoginException:
-  print "Username and password incorrect"
-  sys.exit()
+  setting = settings.get('what_credentials')
+  print setting
+  apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2])
+except:
+  print "What.cd username and password incorrect"
+  print "Add them on the settings page then restart!"
 
 
 # Methods
@@ -79,6 +74,14 @@ def group_info():
   group_id = request.args['id']
   results = apihandle.request('torrentgroup', id=group_id)['response']['group']
   return render_template('group_info.html', group_info=results)
+
+@app.route("/settings", methods=['GET', 'POST'])
+@requires_auth
+def settings_path():
+  output = ''
+  if request.method == 'POST':
+    output = settings.update(request.form)
+  return render_template('settings.html', settings=settings.get_all(), output=output)
 
 
 # Serve Static Assets

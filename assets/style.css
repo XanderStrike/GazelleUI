@@ -1,3 +1,7 @@
+body {
+  padding-top:30px;
+}
+
 .small-up-column {
   display: none;
 }
@@ -39,4 +43,16 @@ table {
 .torrent-container {
   max-height: 275px;
   overflow: hidden;
+}
+
+.brand-link {
+  margin-top:50px;
+  text-decoration:none;
+  color:#000;
+}
+
+.settings-link {
+  float:right;
+  text-decoration:none;
+  color:#000;
 }
