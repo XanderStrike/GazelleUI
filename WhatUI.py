@@ -18,43 +18,16 @@ DOWNLOAD_PATH = 'torrents/'
 # ================
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
-import whatapi
 
 from lib.auth import requires_auth
 import lib.settings as settings
+import lib.wat as wat
 
 app = Flask(__name__)
 app.config.update(DEBUG=True)
 
 # Initialize Settings
 settings.init_db()
-
-
-# Try to login to whatcd
-apihandle = None
-def what_handle():
-  global apihandle
-  try:
-    setting = settings.get('what_credentials')
-    if apihandle != None:
-      return apihandle
-    apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2])
-    return apihandle
-  except:
-    raise Exception('Something went wrong connecting to WhatCD. Ensure that it is up and running, and that your credentials are correct.')
-
-def bust_handle_cache():
-  global apihandle
-  apihandle = None
-
-
-# Methods
-def get_artist_results(query):
-  try:
-    return what_handle().request('artist', artistname=query)['response']
-  except whatapi.whatapi.RequestException:
-    return "an error"
-
 
 # Routes
 @app.route("/")
@@ -69,14 +42,14 @@ def index():
 @requires_auth
 def search():
   query = request.args['q']
-  results = get_artist_results(query)
+  results = wat.get_artist(query)
   return render_template('search.html', results=results)
 
 @app.route("/want")
 @requires_auth
 def want():
   torrent_id = request.args['id']
-  download_link = 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + what_handle().authkey + '&torrent_pass=' + what_handle().passkey
+  download_link = wat.download_link(torrent_id)
   os.system("wget -bq \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
   return "Fetched!"
 
@@ -84,7 +57,7 @@ def want():
 @requires_auth
 def group_info():
   group_id = request.args['id']
-  results = what_handle().request('torrentgroup', id=group_id)['response']['group']
+  results = wat.get_group(group_id)
   return render_template('group_info.html', group_info=results)
 
 @app.route("/settings", methods=['GET', 'POST'])
@@ -93,7 +66,7 @@ def settings_path():
   output = {'message':None,'class':None}
   if request.method == 'POST':
     output = settings.update(request.form)
-    bust_handle_cache()
+    wat.bust_handle_cache()
   return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'])
 
 
