@@ -1,19 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="row">
-  <!-- <div class="six columns">
+  <div class="six columns">
     <h4>WhatUI Credentials</h4>
-    <p>The username and password you'd like to use to log into this interface. Leave blank to disable authentication.</p>
-    <form>
-      <label for="whatui-username">Username</label>
-      <input class="u-full-width" type="text" id="whatui-username">
+    <p>The username and password you'd like to use to log in here.</p>
+    <form action="/settings" method="post">
+      <input type="hidden" value="webui_credentials" name="setting">
+      <label for="webui-credentials">Username</label>
+      <input class="u-full-width" type="text" id="webui-credentials" name="value_1" value="{{ settings.webui_credentials[1] }}">
 
-      <label for="whatui-password">Password</label>
-      <input class="u-full-width" type="password" id="whatui-password">
+      <label for="webui-password">Password</label>
+      <input class="u-full-width" type="password" id="webui-password" name="value_2" placeholder="••••••••••••••••">
 
       <input class="button-primary u-pull-right" type="submit" value="Save">
     </form>
-  </div> -->
+  </div>
 
   <div class="six columns">
     <h4>WhatCD Credentials</h4>

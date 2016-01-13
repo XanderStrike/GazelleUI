@@ -10,7 +10,8 @@ SCHEMA = {
 }
 
 SETTING_NAMES = [
-  'what_credentials'
+  'what_credentials',
+  'webui_credentials'
 ]
 
 DB = 'data.sqlite3'
@@ -46,8 +47,3 @@ def get_all():
 def get(key):
   cur = lite.connect(DB).cursor()
   return cur.execute('select * from settings where key = "' + key + '"').fetchall()[0]
-
-def update_two_value(params):
-  conn = lite.connect(DB)
-  conn.cursor().execute('insert or replace into settings(key, value_1, value_2) values ("' + params['setting'] + '", "' + params['value_1'] + '", "' + params['value_2'] + '")')
-  conn.commit()

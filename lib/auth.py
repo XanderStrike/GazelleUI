@@ -1,11 +1,13 @@
 from flask import request, Response
 from functools import wraps
+import lib.settings as settings
 
 def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    return username == 'xander' and password == 'test'
+    creds = settings.get('webui_credentials')
+    return creds[1] == '' or (username == creds[1] and password == creds[2])
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
