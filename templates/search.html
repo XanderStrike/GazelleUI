@@ -55,7 +55,10 @@
           <tbody>
             {% for torrent in res.torrent %}
               <tr>
-                <td>{{ torrent.format }} {{ torrent.encoding }} </td>
+                <td width=25%>
+                  {{ torrent.displayTitle }}<br>
+                  {{ torrent.media }} / {{ torrent.format }} {{ torrent.encoding }}
+                </td>
                 <td>{{ torrent.fileCount }}</td>
                 <td class='small-up-column'>{{ torrent.size }}</td>
                 <td class='medium-up-column'>{{ torrent.time }}</td>
@@ -68,11 +71,9 @@
           </tbody>
         </table>
       </div>
-      {% if res.torrent.__len__() > 3 %}
-        <div class="u-full-width desc-more">
-          <a href="" groupId="{{ res.groupId }}" class="js-torrent-more-link">More</a>
-        </div>
-      {% endif %}
+      <div class="u-full-width desc-more">
+        <a href="" groupId="{{ res.groupId }}" class="js-torrent-more-link">More</a>
+      </div>
     </div>
   {% endfor %}
 {% endblock %}

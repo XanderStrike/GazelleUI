@@ -20,10 +20,11 @@ def bust_handle_cache():
   apihandle = None
 
 
-# Fetch methods
+# Fetching
 def get_artist(query):
   try:
-    return handle().request('artist', artistname=query)['response']
+    info = handle().request('artist', artistname=query)['response']
+    return handle_artist_results(info)
   except whatapi.whatapi.RequestException:
     return "I should really do something here"
 
@@ -35,3 +36,17 @@ def get_group(group_id):
 
 def download_link(torrent_id):
   return 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
+
+# Massaging
+def handle_artist_results(info):
+  for group in info.get("torrentgroup", []):
+    for torrent in group.get("torrent", []):
+      if torrent.get('remasterYear', 0) == 0:
+        torrent['displayTitle'] = "Original Release"
+        if group.get("groupRecordLabel") != '':
+          torrent['displayTitle'] += " / " + group.get("groupRecordLabel")
+      else:
+        torrent['displayTitle'] = torrent.get('remasterTitle') + " / "
+        torrent['displayTitle'] += torrent.get('remasterRecordLabel')
+
+  return info

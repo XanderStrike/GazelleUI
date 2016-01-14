@@ -1,3 +1,4 @@
+# todo: refactor sqlite3 shit into a service
 import sqlite3 as lite
 
 SCHEMA = {
