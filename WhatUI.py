@@ -6,11 +6,6 @@ import sys
 
 # === Settings ===
 
-# Access
-#   Set BIND to localhost to hide from the big scary internet internet
-PORT = 2020
-BIND = '0.0.0.0'
-
 # Where to save .torrent files
 #   Must end in a slash
 DOWNLOAD_PATH = 'torrents/'
@@ -78,4 +73,5 @@ def send_assets(filename):
 
 # It's Go Time
 if __name__ == "__main__":
-  app.run(host=BIND, port=PORT)
+  network_settings = settings.get('network')
+  app.run(host=network_settings[1], port=int(network_settings[2]))

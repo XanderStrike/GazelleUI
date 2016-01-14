@@ -9,9 +9,10 @@ SCHEMA = {
     ]
 }
 
-SETTING_NAMES = [
-  'what_credentials',
-  'webui_credentials'
+DEFAULT_SETTINGS = [
+  ['what_credentials', '', ''],
+  ['webui_credentials', '', ''],
+  ['network', '0.0.0.0', '2020']
 ]
 
 DB = 'data.sqlite3'
@@ -24,8 +25,8 @@ def init_db():
     print "No DB found, creating..."
     for k in SCHEMA.keys():
       con.cursor().execute("create table " + k + "(" + ", ".join(SCHEMA[k]) + ");")
-    for n in SETTING_NAMES:
-      con.cursor().execute("insert into settings(key) values ('" + n + "')");
+    for setting in DEFAULT_SETTINGS:
+      con.cursor().execute("insert into settings values ('" + "', '".join(setting) + "')");
       con.commit()
 
 
@@ -45,7 +46,6 @@ def get_all():
   s_dict = {}
   for setting in s_list:
     s_dict[setting['key']] = setting
-  print s_dict
   return s_dict
 
 def get(key):
