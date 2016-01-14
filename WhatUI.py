@@ -4,14 +4,6 @@
 import os
 import sys
 
-# === Settings ===
-
-# Where to save .torrent files
-#   Must end in a slash
-DOWNLOAD_PATH = 'torrents/'
-
-# ================
-
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
 
 from lib.auth import requires_auth
@@ -23,6 +15,7 @@ app.config.update(DEBUG=True)
 
 # Initialize Settings
 settings.init_db()
+
 
 # Routes
 @app.route("/")
@@ -45,7 +38,8 @@ def search():
 def want():
   torrent_id = request.args['id']
   download_link = wat.download_link(torrent_id)
-  os.system("wget -bq \"" + download_link + "\" -O " + DOWNLOAD_PATH + torrent_id + ".torrent")
+  download_path = settings.get('torrent')[1]
+  os.system("wget -bq \"" + download_link + "\" -O " + download_path + torrent_id + ".torrent")
   return "Fetched!"
 
 @app.route("/group_info")

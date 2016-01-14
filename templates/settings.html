@@ -38,7 +38,7 @@
 
 <div class="row">
   <div class="six columns">
-    <h4>Network Settings</h4>
+    <h4>Network</h4>
     <p>The what port to listen on and who to respond to. Requires a restart.</p>
     <form action="/settings" method="post">
       <input type="hidden" value="network" name="setting">
@@ -47,6 +47,18 @@
 
       <label for="port">Port</label>
       <input class="u-full-width" id="port" type="text" name="value_2" value="{{ settings.network[2] }}">
+      <input class="button-primary u-pull-right" type="submit" value="Save">
+    </form>
+  </div>
+
+  <div class="six columns">
+    <h4>Torrents</h4>
+    <p>Torrent settings<br><br></p>
+    <form action="/settings" method="post">
+      <input type="hidden" value="torrent" name="setting">
+      <label for="bind">Save location (must end in a slash)</label>
+      <input class="u-full-width" type="text" id="bind" name="value_1" value="{{ settings.torrent[1] }}">
+      <input type="hidden" value="" name="value_2">
       <input class="button-primary u-pull-right" type="submit" value="Save">
     </form>
   </div>

@@ -12,7 +12,8 @@ SCHEMA = {
 DEFAULT_SETTINGS = [
   ['what_credentials', '', ''],
   ['webui_credentials', '', ''],
-  ['network', '0.0.0.0', '2020']
+  ['network', '0.0.0.0', '2020'],
+  ['torrent', 'torrents/', '']
 ]
 
 DB = 'data.sqlite3'
@@ -29,7 +30,6 @@ def init_db():
       con.cursor().execute("insert into settings values ('" + "', '".join(setting) + "')");
       con.commit()
 
-
 def update(params):
   try:
     conn = lite.connect(DB)
@@ -37,6 +37,7 @@ def update(params):
     conn.commit()
     return {'class': 'alert-success', 'message': 'Settings updated successfully.'}
   except:
+    print "Error updating settings: " + sys.exc_info()[0]
     return {'class': 'alert-error', 'message': 'Sorry but something went wrong! Check the log for details.'}
 
 def get_all():
