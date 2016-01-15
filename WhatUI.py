@@ -55,10 +55,7 @@ def search():
 @app.route("/want")
 @requires_auth
 def want():
-  torrent_id = request.args['id']
-  download_link = wat.download_link(torrent_id)
-  download_path = settings.get('torrent')[1]
-  os.system("wget -bq \"" + download_link + "\" -O " + download_path + torrent_id + ".torrent")
+  torrent.queue(request.args['id'])
   return "Fetched!"
 
 @app.route("/group_info")

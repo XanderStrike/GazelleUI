@@ -6,6 +6,12 @@ SCHEMA = {
       "key PRIMARY KEY",
       "value_1",
       "value_2"
+    ],
+  'torrents':
+    [
+      'id PRIMARY KEY',
+      'added DATETIME',
+      'downloaded BOOLEAN'
     ]
 }
 
@@ -31,9 +37,9 @@ def init():
       con.commit()
 
 def update(query):
-  conn = lite.connect(DB)
-  conn.cursor().execute(query)
-  conn.commit()
+  con = lite.connect(DB)
+  con.cursor().execute(query)
+  con.commit()
   return True
 
 def fetch(query):
