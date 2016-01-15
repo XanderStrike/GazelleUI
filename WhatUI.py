@@ -5,13 +5,30 @@ import os
 import sys
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
+from flask_apscheduler import APScheduler
 
 from lib.auth import requires_auth
 import lib.settings as settings
 import lib.wat as wat
+import lib.jobs as jobs
+
+import logging
+logging.basicConfig()
+
+# Configure Scheduler
+class Config(object):
+    JOBS = jobs.job_list()
+    SCHEDULER_VIEWS_ENABLED = True
+    DEBUG = True
 
 app = Flask(__name__)
-app.config.update(DEBUG=True)
+app.config.from_object(Config())
+
+if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+  scheduler = APScheduler()
+  scheduler.init_app(app)
+  scheduler.start()
+
 
 # Initialize Settings
 settings.init_db()
