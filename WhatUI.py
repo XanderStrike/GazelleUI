@@ -57,7 +57,7 @@ def search():
 @requires_auth
 def want():
   torrent.queue(request.form['data'])
-  return "Fetched!"
+  return "<button class='button' disabled>Snatched!</button>"
 
 @app.route("/group_info")
 @requires_auth

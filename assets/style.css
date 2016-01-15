@@ -87,3 +87,9 @@ table {
     border-left-color: #C0392B;
     color: #C0392B;
 }
+
+.button:disabled {
+  border: 1px solid #E3E3E3;
+  color: #888;
+  cursor: not-allowed;
+}
