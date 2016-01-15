@@ -1,11 +1,22 @@
 import database as database
 import wat as wat
 import settings as settings
+import json
 
 import urllib2
 
-def queue(id):
-  database.update('insert into torrents(id, added, downloaded) values ("' + id + '", datetime("now"), 0)')
+def queue(data):
+  data = json.loads(data)
+  query = 'insert into torrents(id, artist, album, release, quality, added, downloaded) values ("' + \
+    str(data['id']) + '", "' + \
+    data['artist'] + '", "' + \
+    data['album'] + '", "' + \
+    data['displayTitle'] + '", "' + \
+    data['media'] + " / " + data['format'] + " " + \
+    data['encoding'] + '", ' + \
+    'datetime("now"), 0)'
+
+  database.update(query)
 
 def download_all():
   torrents = database.row_fetch('select * from torrents where downloaded = 0')
@@ -27,3 +38,6 @@ def download_torrent(torrent_id):
 
   print "Downloaded " + torrent_id + ".torrent"
   database.update('update torrents set downloaded = 1 where id = "' + torrent_id + '"')
+
+def get_recent():
+  return database.row_fetch('select * from torrents order by added desc limit 20')

@@ -24,7 +24,7 @@ $('.js-text-filter').keyup(function() {
 // Fetch
 $('.js-download').click(function() {
   $elem = $(this);
-  $.get($elem.attr('href'), function( data ) {
+  $.post($elem.attr('href'), { 'data': $elem.attr('torrentInfo') }, function( data ) {
     $elem.replaceWith(data);
   });
   return false;

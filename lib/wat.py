@@ -1,6 +1,8 @@
 import whatapi
 import lib.settings as settings
 
+import json
+
 apihandle = None
 
 # Login stuff
@@ -48,5 +50,9 @@ def handle_artist_results(info):
       else:
         torrent['displayTitle'] = torrent.get('remasterTitle') + " / "
         torrent['displayTitle'] += torrent.get('remasterRecordLabel')
+
+      torrent['artist'] = info['name']
+      torrent['album'] = group['groupName']
+      torrent['json'] = json.dumps(torrent)
 
   return info

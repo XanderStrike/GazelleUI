@@ -14,8 +14,8 @@ import lib.wat as wat
 import lib.jobs as jobs
 import lib.torrent as torrent
 
-import logging
-logging.basicConfig()
+# import logging
+# logging.basicConfig()
 
 # Configure Scheduler
 class Config(object):
@@ -43,7 +43,8 @@ def index():
   setting = settings.get('what_credentials')
   if setting[1] == None or setting[1] == '':
     return render_template('settings.html', settings=settings.get_all(), message="Please set your whatcd username and password.", message_class="alert-error")
-  return render_template('index.html')
+  torrents = torrent.get_recent()
+  return render_template('index.html', torrents=torrents)
 
 @app.route("/search")
 @requires_auth
@@ -52,10 +53,10 @@ def search():
   results = wat.get_artist(query)
   return render_template('search.html', results=results)
 
-@app.route("/want")
+@app.route("/want", methods=['POST'])
 @requires_auth
 def want():
-  torrent.queue(request.args['id'])
+  torrent.queue(request.form['data'])
   return "Fetched!"
 
 @app.route("/group_info")

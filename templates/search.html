@@ -65,7 +65,7 @@
                 <td class='medium-up-column'>{{ torrent.snatched }}</td>
                 <td class='small-up-column'>{{ torrent.seeders }}</td>
                 <td class='medium-up-column'>{{ torrent.leechers }}</td>
-                <td><a href="/want?id={{ torrent.id }}" class="js-download button">Download</a></td>
+                <td><a href="/want" class="js-download button" torrentInfo="{{ torrent.json }}">Download</a></td>
               </tr>
             {% endfor %}
           </tbody>

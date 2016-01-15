@@ -10,6 +10,10 @@ SCHEMA = {
   'torrents':
     [
       'id PRIMARY KEY',
+      'artist',
+      'album',
+      'release',
+      'quality',
       'added DATETIME',
       'downloaded BOOLEAN'
     ]
