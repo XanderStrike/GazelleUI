@@ -1,6 +1,4 @@
-# WhatUI
-
-_Why would you need any other tracker?_
+![](http://i.imgur.com/F8hk1Nv.png)
 
 WhatUI is a web based torrent manager a-la CouchPotato, Headphones, or SickRage, but just for What.CD. It serves as a web wrapper for What's API, and downloads torrents into a folder that can be 'watched' by any torrent client for instant downloading.
 
