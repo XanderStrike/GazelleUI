@@ -8,9 +8,11 @@ from flask import Flask, request, jsonify, render_template, redirect, send_from_
 from flask_apscheduler import APScheduler
 
 from lib.auth import requires_auth
+import lib.database as database
 import lib.settings as settings
 import lib.wat as wat
 import lib.jobs as jobs
+import lib.torrent as torrent
 
 import logging
 logging.basicConfig()
@@ -30,8 +32,8 @@ if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
   scheduler.start()
 
 
-# Initialize Settings
-settings.init_db()
+# Initialize Database
+database.init()
 
 
 # Routes
