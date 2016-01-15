@@ -1,5 +1,8 @@
 import whatapi
-import lib.settings as settings
+import settings as settings
+import torrent as torrents
+
+import json
 
 apihandle = None
 
@@ -39,6 +42,12 @@ def download_link(torrent_id):
 
 # Massaging
 def handle_artist_results(info):
+  snatched_torrents = torrents.get_ids_for_artist(info['name'])
+  try:
+      snatched_torrents = list(zip(*snatched_torrents)[0])
+  except IndexError:
+      snatched_torrents = []
+
   for group in info.get("torrentgroup", []):
     for torrent in group.get("torrent", []):
       if torrent.get('remasterYear', 0) == 0:
@@ -48,5 +57,14 @@ def handle_artist_results(info):
       else:
         torrent['displayTitle'] = torrent.get('remasterTitle') + " / "
         torrent['displayTitle'] += torrent.get('remasterRecordLabel')
+
+      if str(torrent.get('id')) in snatched_torrents:
+        torrent['alreadySnatched'] = 1
+      else:
+        torrent['alreadySnatched'] = 0
+
+      torrent['artist'] = info['name']
+      torrent['album'] = group['groupName']
+      torrent['json'] = json.dumps(torrent)
 
   return info

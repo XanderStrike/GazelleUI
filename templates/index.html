@@ -1,4 +1,32 @@
 {% extends "layout.html" %}
 {% block body %}
-<p>Search for something.</p>
+<h2>Recent Snatches</h2>
+
+<table class="u-full-width">
+  <thead>
+    <tr>
+      <th class='medium-up-column'>Artist</th>
+      <th>Release</th>
+      <th class='small-up-column'>Quality</th>
+      <th class='medium-up-column'>Added</th>
+      <th>Snatched</th>
+    </tr>
+  <thead>
+  <tbody>
+    {% for t in torrents %}
+      <tr>
+        <td class='medium-up-column'>{{ t[1] }}</td>
+        <td>{{ t[2] }} / {{ t[3] }}</td>
+        <td class='small-up-column'>{{ t[4] }}</td>
+        <td class='medium-up-column'>{{ t[5] }}</td>
+        <td>
+          {% if t[6] == 0 %}
+            <i class="fa fa-times"></i>
+          {% else %}
+            <i class="fa fa-check"></i>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
 {% endblock %}
