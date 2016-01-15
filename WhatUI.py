@@ -5,16 +5,35 @@ import os
 import sys
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response
+from flask_apscheduler import APScheduler
 
 from lib.auth import requires_auth
+import lib.database as database
 import lib.settings as settings
 import lib.wat as wat
+import lib.jobs as jobs
+import lib.torrent as torrent
+
+import logging
+logging.basicConfig()
+
+# Configure Scheduler
+class Config(object):
+    JOBS = jobs.job_list()
+    SCHEDULER_VIEWS_ENABLED = True
+    DEBUG = True
 
 app = Flask(__name__)
-app.config.update(DEBUG=True)
+app.config.from_object(Config())
 
-# Initialize Settings
-settings.init_db()
+if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+  scheduler = APScheduler()
+  scheduler.init_app(app)
+  scheduler.start()
+
+
+# Initialize Database
+database.init()
 
 
 # Routes
@@ -36,10 +55,7 @@ def search():
 @app.route("/want")
 @requires_auth
 def want():
-  torrent_id = request.args['id']
-  download_link = wat.download_link(torrent_id)
-  download_path = settings.get('torrent')[1]
-  os.system("wget -bq \"" + download_link + "\" -O " + download_path + torrent_id + ".torrent")
+  torrent.queue(request.args['id'])
   return "Fetched!"
 
 @app.route("/group_info")
