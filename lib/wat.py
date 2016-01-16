@@ -63,8 +63,18 @@ def handle_artist_results(info):
       else:
         torrent['alreadySnatched'] = 0
 
+      torrent['size'] = human_readable(torrent['size'])
+
       torrent['artist'] = info['name']
       torrent['album'] = group['groupName']
       torrent['json'] = json.dumps(torrent)
 
   return info
+
+# http://stackoverflow.com/a/1094933/1855253
+def human_readable(size):
+  for unit in ['','K','M','G','T','P','E','Z']:
+    if abs(size) < 1024.0:
+        return "%3.1f%s%s" % (size, unit, 'B')
+    size /= 1024.0
+  return "%.1f%s%s" % (size, 'Y', 'B')
