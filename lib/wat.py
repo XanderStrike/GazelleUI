@@ -46,6 +46,13 @@ def browse(searchstr):
   except:
     return "I should really do something here"
 
+def label(searchstr):
+  try:
+    info = handle().request('browse', recordlabel=searchstr)['response']
+    return handle_browse_results(info)
+  except:
+    return "I should really do something here"
+
 def download_link(torrent_id):
   return 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
 
