@@ -44,3 +44,6 @@ def get_recent():
 
 def get_ids_for_artist(artist):
   return database.fetch('select id from torrents where artist = "' + artist + '"')
+
+def get_all_ids():
+  return database.fetch('select id from torrents')

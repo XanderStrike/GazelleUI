@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Results</h2>
+  <input type="search" class="u-full-width js-text-filter" placeholder="Filter by title">
+
+  {% for res in results.results %}
+    <div class="js-release">
+      <h2 class="js-title">{{ res.artist }} - {{ res.groupName }}</h2>
+
+      <div class="torrent-container js-torrent-container-{{ res.groupId }}">
+        <table class="u-full-width">
+          {% for torrent in res.torrents %}
+            <tr>
+              <td>
+                {{ torrent.displayTitle }}<br>
+                {{ torrent.media }} / {{ torrent.format }} {{ torrent.encoding }}
+              </td>
+              <td>{{ torrent.fileCount }}</td>
+              <td class='small-up-column'>{{ torrent.size }}</td>
+              <td class='medium-up-column'>{{ torrent.time }}</td>
+              <td class='medium-up-column'>{{ torrent.snatched }}</td>
+              <td class='small-up-column'>{{ torrent.seeders }}</td>
+              <td class='medium-up-column'>{{ torrent.leechers }}</td>
+              <td>
+                {% if torrent.alreadySnatched == 1 %}
+                  <button class="button" disabled>Snatched!</button>
+                {% else %}
+                  <a href="/want" class="js-download button" torrentInfo="{{ torrent.json }}">Download</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <div class="u-full-width desc-more">
+        <a href="" groupId="{{ res.groupId }}" class="js-torrent-more-link">More</a>
+      </div>
+      <hr>
+    </div>
+  {% endfor %}
+{% endblock %}
