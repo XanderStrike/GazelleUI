@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>Results</h2>
+  <h2>Results for "{{ query }}"</h2>
   <input type="search" class="u-full-width js-text-filter" placeholder="Filter by title">
 
   {% for res in results.results %}

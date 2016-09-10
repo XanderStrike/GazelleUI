@@ -58,14 +58,14 @@ def artist():
 def browse():
   query = request.args['q']
   results = wat.browse(query)
-  return render_template('browse.html', results=results)
+  return render_template('browse.html', results=results, query=query)
 
 @app.route("/label")
 @requires_auth
 def label():
   query = request.args['q']
   results = wat.label(query)
-  return render_template('browse.html', results=results)
+  return render_template('browse.html', results=results, query=query)
 
 @app.route("/want", methods=['POST'])
 @requires_auth
