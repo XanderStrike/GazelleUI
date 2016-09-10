@@ -46,12 +46,26 @@ def index():
   torrents = torrent.get_recent()
   return render_template('index.html', torrents=torrents)
 
-@app.route("/search")
+@app.route("/artist")
 @requires_auth
-def search():
+def artist():
   query = request.args['q']
   results = wat.get_artist(query)
-  return render_template('search.html', results=results)
+  return render_template('artist.html', results=results)
+
+@app.route("/browse")
+@requires_auth
+def browse():
+  query = request.args['q']
+  results = wat.browse(query)
+  return render_template('browse.html', results=results)
+
+@app.route("/label")
+@requires_auth
+def label():
+  query = request.args['q']
+  results = wat.label(query)
+  return render_template('browse.html', results=results)
 
 @app.route("/want", methods=['POST'])
 @requires_auth
