@@ -1,3 +1,9 @@
+# Rest in peace What.cd
+
+I'm absolutely crushed. What.cd was the most complete repository of our musical history that has ever existed. I hope we can achieve something like that again.
+
+Unfortunately, this project is no longer functional. I _suspect_ it will work with other sites running Gazelle, but I can't be certain. I fully intend to update this, or build a new app that works with whatever comes next, as soon as I get an invitation (my email's in my profile wink wink).
+
 ![](http://i.imgur.com/NNByEC0.png)
 
 WhatUI is a web based torrent manager a-la CouchPotato, Headphones, or SickRage, but just for What.CD. It serves as a web wrapper for What's API, and downloads torrents into a folder that can be 'watched' by any torrent client for instant downloading.
