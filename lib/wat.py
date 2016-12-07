@@ -54,7 +54,7 @@ def label(searchstr):
     return "I should really do something here"
 
 def download_link(torrent_id):
-  return 'https://ssl.what.cd/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
+  return 'https://apollo.rip/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
 
 # Massaging
 def handle_browse_results(info):
