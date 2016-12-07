@@ -1,4 +1,4 @@
-![](http://i.imgur.com/NNByEC0.png)
+![](http://i.imgur.com/reN909I.png)
 
 ApolloUI is a web based torrent manager a-la CouchPotato, Headphones, or SickRage, but just for Apollo.rip. It serves as a web wrapper for Apollo's API, and downloads torrents into a folder that can be 'watched' by any torrent client for instant downloading.
 
