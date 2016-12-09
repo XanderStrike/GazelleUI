@@ -42,6 +42,9 @@ def download_torrent(torrent_id):
 def get_recent():
   return database.row_fetch('select * from torrents order by added desc limit 20')
 
+def get_all():
+  return database.row_fetch('select * from torrents order by added desc')
+
 def get_ids_for_artist(artist):
   return database.fetch('select id from torrents where artist = "' + artist + '"')
 
