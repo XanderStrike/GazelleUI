@@ -89,6 +89,11 @@ def settings_path():
     wat.bust_handle_cache()
   return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'])
 
+@app.route("/snatches")
+@requires_auth
+def snatches():
+  torrents = torrent.get_all()
+  return render_template('snatches.html', torrents=torrents)
 
 # Serve Static Assets
 @app.route('/assets/<path:filename>')
