@@ -16,8 +16,8 @@ Set up the prerequisites and run:
 
     sudo apt-get update
     sudo apt-get install wget python-pip
-    sudo pip install flask flask_apscheduler futures requests funcsigs
-    python ApolloUI.py
+    sudo pip install flask flask_apscheduler futures requests funcsigs
+    python ApolloUI.py
 
 
 Then visit `<ip-address>:2020` to set it up!
