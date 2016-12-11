@@ -16,7 +16,7 @@ Set up the prerequisites and run:
 
     sudo apt-get update
     sudo apt-get install wget python-pip
-    sudo pip install flask flask_apscheduler futures requests funcsigs
+    sudo pip install -r requirements.txt
     python ApolloUI.py
 
 
