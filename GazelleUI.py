@@ -98,8 +98,11 @@ def snatches():
 # Serve Static Assets
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
-    return send_from_directory('assets', filename)
+  return send_from_directory('assets', filename)
 
+@app.route('/<path:filename>')
+def catch_all(filename):
+  return send_from_directory('assets', filename)
 
 # It's Go Time
 if __name__ == "__main__":
