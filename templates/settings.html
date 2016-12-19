@@ -7,7 +7,7 @@
 
 <div class="row">
   <div class="six columns">
-    <h4>ApolloUI Credentials</h4>
+    <h4>GazelleUI Credentials</h4>
     <p>The username and password you'd like to use to log in here.</p>
     <form action="/settings" method="post">
       <input type="hidden" value="webui_credentials" name="setting">
@@ -19,11 +19,20 @@
 
       <input class="button-primary u-pull-right" type="submit" value="Save">
     </form>
-  </div>
 
-  <div class="six columns">
-    <h4>Apollo.rip Credentials</h4>
-    <p>The username and password that you use to log in to Apollo.</p>
+    <h4>Tracker Domain</h4>
+    <p>The domain of the site you use to log in, including protocol (https://apollo.rip, https://passtheheadphones.me).</p>
+    <form action="/settings" method="post">
+      <input type="hidden" value="domain" name="setting">
+      <input type="hidden" value="" name="value_2">
+      <label for="username">Domain</label>
+      <input class="u-full-width" type="text" id="domain" name="value_1" value="{{ settings.domain[1] }}">
+
+      <input class="button-primary u-pull-right" type="submit" value="Save">
+    </form>
+
+    <h4>Tracker Credentials</h4>
+    <p>The username and password that you use to log in to the site.</p>
     <form action="/settings" method="post">
       <input type="hidden" value="what_credentials" name="setting">
       <label for="username">Username</label>
@@ -34,12 +43,20 @@
       <input class="button-primary u-pull-right" type="submit" value="Save">
     </form>
   </div>
-</div>
 
-<div class="row">
   <div class="six columns">
+    <h4>Torrents</h4>
+    <p>Torrent settings</p>
+    <form action="/settings" method="post">
+      <input type="hidden" value="torrent" name="setting">
+      <label for="bind">Save location (must end in a slash)</label>
+      <input class="u-full-width" type="text" id="bind" name="value_1" value="{{ settings.torrent[1] }}">
+      <input type="hidden" value="" name="value_2">
+      <input class="button-primary u-pull-right" type="submit" value="Save">
+    </form>
+
     <h4>Network</h4>
-    <p>The what port to listen on and who to respond to. Requires a restart.</p>
+    <p>The what port to listen on and who to respond to. Requires a restart. Defaults are fine for most users.</p>
     <form action="/settings" method="post">
       <input type="hidden" value="network" name="setting">
       <label for="bind">Bind</label>
@@ -50,17 +67,6 @@
       <input class="button-primary u-pull-right" type="submit" value="Save">
     </form>
   </div>
-
-  <div class="six columns">
-    <h4>Torrents</h4>
-    <p>Torrent settings<br><br></p>
-    <form action="/settings" method="post">
-      <input type="hidden" value="torrent" name="setting">
-      <label for="bind">Save location (must end in a slash)</label>
-      <input class="u-full-width" type="text" id="bind" name="value_1" value="{{ settings.torrent[1] }}">
-      <input type="hidden" value="" name="value_2">
-      <input class="button-primary u-pull-right" type="submit" value="Save">
-    </form>
-  </div>
 </div>
+
 {% endblock %}

@@ -22,11 +22,12 @@ class RequestException(Exception):
 
 
 class WhatAPI:
-    def __init__(self, config_file=None, username=None, password=None, cookies=None):
+    def __init__(self, config_file=None, username=None, password=None, cookies=None, domain=None):
         self.session = requests.Session()
         self.session.headers = headers
         self.authkey = None
         self.passkey = None
+        self.domain = domain
         if config_file:
             config = ConfigParser()
             config.read(config_file)
@@ -52,7 +53,7 @@ class WhatAPI:
 
     def _login(self):
         '''Logs in user'''
-        loginpage = 'https://apollo.rip/login.php'
+        loginpage = self.domain + '/login.php'
         data = {'username': self.username,
                 'password': self.password,
                 'keeplogged': 1,
@@ -65,7 +66,7 @@ class WhatAPI:
 
     def get_torrent(self, torrent_id):
         '''Downloads the torrent at torrent_id using the authkey and passkey'''
-        torrentpage = 'https://apollo.rip/torrents.php'
+        torrentpage = self.domain + '/torrents.php'
         params = {'action': 'download', 'id': torrent_id}
         if self.authkey:
             params['authkey'] = self.authkey
@@ -78,13 +79,13 @@ class WhatAPI:
 
     def logout(self):
         '''Logs out user'''
-        logoutpage = 'https://apollo.rip/logout.php'
+        logoutpage = self.domain + '/logout.php'
         params = {'auth': self.authkey}
         self.session.get(logoutpage, params=params, allow_redirects=False)
 
     def request(self, action, **kwargs):
         '''Makes an AJAX request at a given action page'''
-        ajaxpage = 'https://apollo.rip/ajax.php'
+        ajaxpage = self.domain + '/ajax.php'
         params = {'action': action}
         if self.authkey:
             params['auth'] = self.authkey

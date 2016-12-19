@@ -23,7 +23,8 @@ DEFAULT_SETTINGS = [
   ['what_credentials', '', ''],
   ['webui_credentials', '', ''],
   ['network', '0.0.0.0', '2020'],
-  ['torrent', 'torrents/', '']
+  ['torrent', 'torrents/', ''],
+  ['domain', 'https://apollo.rip', '']
 ]
 
 DB = 'data.sqlite3'
@@ -36,9 +37,11 @@ def init():
     print "No DB found, creating..."
     for k in SCHEMA.keys():
       con.cursor().execute("create table " + k + "(" + ", ".join(SCHEMA[k]) + ");")
-    for setting in DEFAULT_SETTINGS:
-      con.cursor().execute("insert into settings values ('" + "', '".join(setting) + "')");
-      con.commit()
+
+  for setting in DEFAULT_SETTINGS:
+    con.cursor().execute("insert into settings(key, value_1, value_2) select '" + "', '".join(setting) + "' where not exists(select 1 from settings where key = '" + setting[0] + "')")
+
+  con.commit()
 
 def update(query):
   con = lite.connect(DB)

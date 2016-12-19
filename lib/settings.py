@@ -5,7 +5,7 @@ def update(params):
     database.update('insert or replace into settings(key, value_1, value_2) values ("' + params['setting'] + '", "' + params['value_1'] + '", "' + params['value_2'] + '")')
     return {'class': 'alert-success', 'message': 'Settings updated successfully.'}
   except:
-    print "Error updating settings: " + sys.exc_info()[0]
+    print "Error updating settings"
     return {'class': 'alert-error', 'message': 'Sorry but something went wrong! Check the log for details.'}
 
 def get_all():
