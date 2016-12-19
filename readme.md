@@ -1,4 +1,4 @@
-![](http://i.imgur.com/reN909I.png)
+![](http://i.imgur.com/LWfT3y6.png)
 
 GazelleUI is a web based torrent manager a-la CouchPotato, Headphones, or SickRage, but just for [Gazelle](https://github.com/WhatCD/Gazelle) based music trackers (such as APL or PTH). It serves as a web wrapper for Gazelle's API, and downloads torrents into a folder that can be 'watched' by any torrent client for instant downloading.
 
