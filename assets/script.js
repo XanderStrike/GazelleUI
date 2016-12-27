@@ -3,7 +3,6 @@ function do_filters() {
   var regex = new RegExp($('.js-text-filter').val(), "i");
   var rows = $('.js-release');
   var type = $('.js-type-filter').val();
-  console.log(type);
   rows.each(function (index) {
     title = $(this).children(".js-title").html()
     if (title.search(regex) != -1 && (type == '0' || type == undefined || $(this).hasClass("js-release-type-" + type))) {
@@ -19,6 +18,10 @@ $('.js-type-filter').change(function() {
 })
 
 $('.js-text-filter').keyup(function() {
+  do_filters();
+});
+
+$(document).ready(function() {
   do_filters();
 });
 
