@@ -1,6 +1,7 @@
 import whatapi
 import settings as settings
 import torrent as torrents
+import database as database
 
 import json
 
@@ -56,6 +57,20 @@ def label(searchstr):
 def download_link(torrent_id):
   domain = settings.get('domain')[1]
   return domain + '/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
+
+def refresh_user_info():
+  info = handle().request('index')['response']
+  database.update("update user set username = '" + info['username'] + "', "
+                  "upload = '" + human_readable(info['userstats']['uploaded']) + "', "
+                  "download = '" + human_readable(info['userstats']['downloaded']) + "', "
+                  "ratio = '" + str(info['userstats']['ratio'] )+ "', "
+                  "requiredratio = '" + str(info['userstats']['requiredratio']) + "', "
+                  "class = '" + str(info['userstats']['class']) + "', "
+                  "notifications = '" + str(info['notifications']['notifications']) + "', "
+                  "newSubscriptions = '" + str(info['notifications']['newSubscriptions']) + "', "
+                  "messages = '" + str(info['notifications']['messages']) + "', "
+                  "newBlog = '" + str(info['notifications']['newBlog']) + "'"
+    )
 
 # Massaging
 def handle_browse_results(info):
