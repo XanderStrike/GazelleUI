@@ -35,6 +35,10 @@
       <a href="/" class="brand-link">GazelleUI</a>
       <a href="/settings" class="settings-link"><i class="fa fa-cog"></i></a>
     </h1>
+    {% if userinfo is defined %}
+      <p>{{ userinfo[0] }} / Up: {{ userinfo[1] }} / Down: {{ userinfo[2] }} / Ratio: {{ userinfo[3] }} / Required: {{ userinfo[4] }} </p>
+    {% endif %}
+
     {% include "shared/_filters.html" %}
     {% block body %}{% endblock %}
   </div>

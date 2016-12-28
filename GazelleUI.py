@@ -45,28 +45,28 @@ def index():
   if setting[1] == None or setting[1] == '':
     return render_template('settings.html', settings=settings.get_all(), message="Please set your whatcd username and password.", message_class="alert-error")
   torrents = torrent.get_recent()
-  return render_template('index.html', torrents=torrents)
+  return render_template('index.html', torrents=torrents, userinfo=database.userinfo())
 
 @app.route("/artist")
 @requires_auth
 def artist():
   query = request.args['q']
   results = wat.get_artist(query)
-  return render_template('artist.html', results=results)
+  return render_template('artist.html', results=results, userinfo=database.userinfo())
 
 @app.route("/browse")
 @requires_auth
 def browse():
   query = request.args['q']
   results = wat.browse(query)
-  return render_template('browse.html', results=results, query=query)
+  return render_template('browse.html', results=results, query=query, userinfo=database.userinfo())
 
 @app.route("/label")
 @requires_auth
 def label():
   query = request.args['q']
   results = wat.label(query)
-  return render_template('browse.html', results=results, query=query)
+  return render_template('browse.html', results=results, query=query, userinfo=database.userinfo())
 
 @app.route("/want", methods=['POST'])
 @requires_auth
@@ -88,13 +88,13 @@ def settings_path():
   if request.method == 'POST':
     output = settings.update(request.form)
     wat.bust_handle_cache()
-  return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'])
+  return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'], userinfo=database.userinfo())
 
 @app.route("/snatches")
 @requires_auth
 def snatches():
   torrents = torrent.get_all()
-  return render_template('snatches.html', torrents=torrents)
+  return render_template('snatches.html', torrents=torrents, userinfo=database.userinfo())
 
 # Serve Static Assets
 @app.route('/assets/<path:filename>')

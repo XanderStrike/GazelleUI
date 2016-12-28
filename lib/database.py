@@ -16,6 +16,19 @@ SCHEMA = {
       'quality',
       'added DATETIME',
       'downloaded BOOLEAN'
+    ],
+  'user':
+    [
+      'username PRIMARY KEY',
+      'upload',
+      'download',
+      'ratio',
+      'requiredratio',
+      'class',
+      'notifications',
+      'newSubscriptions',
+      'messages',
+      'newBlog'
     ]
 }
 
@@ -31,15 +44,17 @@ DB = 'data.sqlite3'
 
 def init():
   con = lite.connect(DB)
-  try:
-    con.cursor().execute("select * from " + SCHEMA.keys()[0])
-  except lite.OperationalError:
-    print "No DB found, creating..."
-    for k in SCHEMA.keys():
-      con.cursor().execute("create table " + k + "(" + ", ".join(SCHEMA[k]) + ");")
+
+  for k in SCHEMA.keys():
+    con.cursor().execute("create table if not exists " + k + "(" + ", ".join(SCHEMA[k]) + ");")
 
   for setting in DEFAULT_SETTINGS:
     con.cursor().execute("insert into settings(key, value_1, value_2) select '" + "', '".join(setting) + "' where not exists(select 1 from settings where key = '" + setting[0] + "')")
+
+  con.commit()
+
+  if (con.cursor().execute("select count(1) from user").fetchall() == [(0,)]):
+    con.cursor().execute("insert into user(username) select ''")
 
   con.commit()
 
@@ -57,3 +72,6 @@ def row_fetch(query):
   con = lite.connect(DB)
   con.row_factory = lite.Row
   return con.cursor().execute(query).fetchall()
+
+def userinfo():
+  return fetch('select * from user')[0]
