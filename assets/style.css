@@ -2,6 +2,10 @@ body {
   padding-top:30px;
 }
 
+a {
+  text-decoration: none;
+}
+
 .small-up-column {
   display: none;
 }
@@ -55,6 +59,20 @@ table {
   float:right;
   text-decoration:none;
   color:#000;
+}
+
+.more-search {
+  text-align: center;
+  cursor: pointer;
+}
+
+.advanced-search {
+  display: none;
+}
+
+.search-loading {
+  text-align: center;
+  display: none;
 }
 
 /* alerts */
