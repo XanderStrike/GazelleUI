@@ -1,3 +1,13 @@
+// Search
+$('.js-more-search').on('click', function() {
+  $('.js-advanced-search').slideToggle();
+});
+
+$('.js-search').on('submit', function() {
+  $('.js-search-box').hide();
+  $('.js-search-loading').fadeIn();
+})
+
 // Release Filters
 function do_filters() {
   var regex = new RegExp($('.js-text-filter').val(), "i");
