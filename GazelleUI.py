@@ -21,6 +21,7 @@ import lib.torrent as torrent
 class Config(object):
     JOBS = jobs.job_list()
     SCHEDULER_VIEWS_ENABLED = True
+    SCHEDULER_TIMEZONE = "America/Los_Angeles"
     DEBUG = True
 
 app = Flask(__name__)
