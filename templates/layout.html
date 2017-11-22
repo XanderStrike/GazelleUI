@@ -31,16 +31,21 @@
 </head>
 <body>
   <div class="container">
-    <h1>
-      <a href="/" class="brand-link">GazelleUI</a>
-      <a href="/settings" class="settings-link"><i class="fa fa-cog"></i></a>
+    <h1 style="text-align: center">
+      <a href="/"><img src="/assets/logo.png" style="max-width: 200px"></a>
     </h1>
-    {% if userinfo is defined %}
-      <p>{{ userinfo[0] }} / Up: {{ userinfo[1] }} / Down: {{ userinfo[2] }} / Ratio: {{ userinfo[3] }} / Required: {{ userinfo[4] }} </p>
-    {% endif %}
 
     {% include "shared/_filters.html" %}
     {% block body %}{% endblock %}
+
+    <div style="text-align: center">
+      <p>
+      {% if userinfo is defined %}
+        {{ userinfo[0] }} / Up: {{ userinfo[1] }} / Down: {{ userinfo[2] }} / Ratio: {{ userinfo[3] }} / Required: {{ userinfo[4] }} /
+      {% endif %}
+        <a href="/settings">Settings</a>
+      </p>
+  </div>
   </div>
 
   <script src="/assets/jquery-1.11.3.min.js"></script>

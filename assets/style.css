@@ -1,5 +1,7 @@
 body {
   padding-top:30px;
+  background-color: #461e1e;
+  color: #fff;
 }
 
 h1 {
@@ -7,7 +9,16 @@ h1 {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
+  color: #fff;
+}
+
+a:hover {
+  color: #fff;
+}
+
+input, select {
+  color: #000;
 }
 
 .small-up-column {
@@ -56,7 +67,11 @@ table {
 .brand-link {
   margin-top:50px;
   text-decoration:none;
-  color:#000;
+  color: #fff;
+}
+
+.brand-link:hover {
+  color: #fff;
 }
 
 .settings-link {
@@ -108,6 +123,10 @@ table {
     background-color: #F2D7D5;
     border-left-color: #C0392B;
     color: #C0392B;
+}
+
+.button {
+  color: #fff;
 }
 
 .button:disabled {
