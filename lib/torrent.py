@@ -6,7 +6,6 @@ import json
 import urllib2
 
 def queue(data):
-  data = json.loads(data)
   query = 'insert into torrents(id, artist, album, release, quality, added, downloaded) values ("' + \
     str(data['id']) + '", "' + \
     data['artist'] + '", "' + \
@@ -17,6 +16,10 @@ def queue(data):
     'datetime("now"), 0)'
 
   database.update(query)
+
+def exists(id):
+  query = 'select id from torrents where id = "' + str(id) + '"'
+  return database.fetch(query) != []
 
 def download_all():
   torrents = database.row_fetch('select * from torrents where downloaded = 0')

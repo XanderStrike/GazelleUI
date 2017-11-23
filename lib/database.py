@@ -29,6 +29,14 @@ SCHEMA = {
       'newSubscriptions',
       'messages',
       'newBlog'
+    ],
+  'subscriptions':
+    [
+      'id INTEGER PRIMARY KEY AUTOINCREMENT',
+      'search_type',
+      'term',
+      'quality',
+      'release_type'
     ]
 }
 
@@ -75,3 +83,16 @@ def row_fetch(query):
 
 def userinfo():
   return fetch('select * from user')[0]
+
+def subscriptions():
+  res = fetch('select search_type, term, quality, release_type from subscriptions')
+  h = []
+  for r in res:
+    h.append({
+      'search_type': r[0],
+      'term': r[1],
+      'quality': r[2],
+      'release_type': r[3],
+      })
+
+  return h

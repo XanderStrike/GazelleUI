@@ -13,6 +13,9 @@ import lib.settings as settings
 import lib.wat as wat
 import lib.jobs as jobs
 import lib.torrent as torrent
+import lib.autofetch as autofetch
+
+import json
 
 # import logging
 # logging.basicConfig()
@@ -71,7 +74,7 @@ def label():
 @app.route("/want", methods=['POST'])
 @requires_auth
 def want():
-  torrent.queue(request.form['data'])
+  torrent.queue(json.loads(request.form['data']))
   return "<button class='button' disabled>Snatched!</button>"
 
 @app.route("/group_info")
