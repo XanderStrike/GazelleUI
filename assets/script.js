@@ -5,6 +5,7 @@ $('.js-more-search').on('click', function() {
 
 $('.js-search').on('submit', function() {
   $('.js-search-box').hide();
+  $('.js-body-content').hide();
   $('.js-search-loading').fadeIn();
 })
 
@@ -23,17 +24,9 @@ function do_filters() {
   });
 }
 
-$('.js-type-filter').change(function() {
-  do_filters();
-})
-
-$('.js-text-filter').keyup(function() {
-  do_filters();
-});
-
-$(document).ready(function() {
-  do_filters();
-});
+$('.js-type-filter').change(do_filters)
+$('.js-text-filter').keyup(do_filters);
+$(document).ready(do_filters);
 
 // Fetch
 $('.js-download').click(function() {

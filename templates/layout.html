@@ -36,7 +36,10 @@
     </h1>
 
     {% include "shared/_filters.html" %}
-    {% block body %}{% endblock %}
+
+    <div class="js-body-content">
+      {% block body %}{% endblock %}
+    </div>
 
     <div style="text-align: center">
       <p>
