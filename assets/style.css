@@ -21,6 +21,10 @@ input, select {
   color: #000;
 }
 
+input[type="submit"], input[type="submit"]:hover {
+  color: #fff;
+}
+
 .small-up-column {
   display: none;
 }
@@ -125,7 +129,7 @@ table {
     color: #C0392B;
 }
 
-.button {
+.button, .button:hover {
   color: #fff;
 }
 

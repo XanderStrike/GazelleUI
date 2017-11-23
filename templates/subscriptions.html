@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Subscriptions</h2>
+
+<form action="/create_sub" method="post">
+  <select name="search_type">
+    <option value="artist">Artist</option>
+    <option value="label">Record Label</option>
+  </select>
+
+  <input name="term" type="search" placeholder="search term">
+
+  <select name="quality">
+    <option value="V0 (VBR)">V0 (VBR)</option>
+    <option value="320">320</option>
+    <option value="Lossless">Lossless</option>
+  </select>
+
+  <select name="release_type">
+    <option value="1">Albums</option>
+    <option value="3">Soundtracks</option>
+    <option value="5">EPs</option>
+    <option value="6">Anthologies</option>
+    <option value="7">Compilations</option>
+    <option value="9">Singles</option>
+    <option value="11">Live albums</option>
+    <option value="13">Remixs</option>
+    <option value="14">Bootlegs</option>
+    <option value="15">Interviews</option>
+    <option value="16">Mixtapes</option>
+    <option value="21">Unknowns</option>
+    <option value="23">Demos</option>
+  </select>
+
+  <input type="submit" class="button" value="Add Subscription">
+</form>
+
+<p>Subscriptions are checked every 12 hours.</p>
+
+
+<table class="u-full-width">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Term</th>
+      <th>Quality</th>
+      <th>Release Type</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sub in subs %}
+      <tr>
+        <td>{{ sub['search_type'] }}</td>
+        <td>{{ sub['term'] }}</td>
+        <td>{{ sub['quality'] }}</td>
+        <td>{{ sub['release_type'] }}</td>
+        <td><a href="/delete_sub/{{ sub['id'] }}">Delete</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

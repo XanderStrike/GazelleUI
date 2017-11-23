@@ -99,6 +99,24 @@ def snatches():
   torrents = torrent.get_all()
   return render_template('snatches.html', torrents=torrents, userinfo=database.userinfo())
 
+@app.route('/delete_sub/<int:sub_id>')
+@requires_auth
+def delete_sub(sub_id):
+  database.delete_sub(sub_id)
+  return redirect('/subscriptions')
+
+@app.route('/create_sub', methods=['POST'])
+@requires_auth
+def create_sub():
+  autofetch.create_subscription(request.form)
+  return redirect('/subscriptions')
+
+@app.route("/subscriptions")
+@requires_auth
+def subscriptions():
+  subs = database.subscriptions()
+  return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo())
+
 # Serve Static Assets
 @app.route('/assets/<path:filename>')
 def send_assets(filename):

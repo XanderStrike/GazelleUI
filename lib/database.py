@@ -85,7 +85,7 @@ def userinfo():
   return fetch('select * from user')[0]
 
 def subscriptions():
-  res = fetch('select search_type, term, quality, release_type from subscriptions')
+  res = fetch('select search_type, term, quality, release_type, id from subscriptions')
   h = []
   for r in res:
     h.append({
@@ -93,6 +93,10 @@ def subscriptions():
       'term': r[1],
       'quality': r[2],
       'release_type': r[3],
+      'id': r[4]
       })
 
   return h
+
+def delete_sub(id):
+  update("delete from subscriptions where id = " + str(id))

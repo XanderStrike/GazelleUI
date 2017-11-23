@@ -43,7 +43,7 @@ def download_torrent(torrent_id):
   database.update('update torrents set downloaded = 1 where id = "' + torrent_id + '"')
 
 def get_recent():
-  return database.row_fetch('select * from torrents order by added desc limit 20')
+  return database.row_fetch('select * from torrents order by added desc limit 10')
 
 def get_all():
   return database.row_fetch('select * from torrents order by added desc')
