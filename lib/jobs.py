@@ -1,5 +1,6 @@
 import torrent as torrent
 import wat as wat
+import autofetch as af
 
 def job_list():
   return [
@@ -14,6 +15,12 @@ def job_list():
       'func': '__main__:jobs.update_user',
       'trigger': 'interval',
       'seconds': 900
+    },
+    {
+      'id': 'autofetch',
+      'func': '__main__:jobs.autofetch',
+      'trigger': 'interval',
+      'seconds': 11520
     }
   ]
 
@@ -23,3 +30,6 @@ def download_torrents():
 def update_user():
   print 'Updating user info'
   wat.refresh_user_info()
+
+def autofetch():
+  af.run()
