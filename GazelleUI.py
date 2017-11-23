@@ -13,6 +13,9 @@ import lib.settings as settings
 import lib.wat as wat
 import lib.jobs as jobs
 import lib.torrent as torrent
+import lib.autofetch as autofetch
+
+import json
 
 # import logging
 # logging.basicConfig()
@@ -71,7 +74,7 @@ def label():
 @app.route("/want", methods=['POST'])
 @requires_auth
 def want():
-  torrent.queue(request.form['data'])
+  torrent.queue(json.loads(request.form['data']))
   return "<button class='button' disabled>Snatched!</button>"
 
 @app.route("/group_info")
@@ -95,6 +98,24 @@ def settings_path():
 def snatches():
   torrents = torrent.get_all()
   return render_template('snatches.html', torrents=torrents, userinfo=database.userinfo())
+
+@app.route('/delete_sub/<int:sub_id>')
+@requires_auth
+def delete_sub(sub_id):
+  database.delete_sub(sub_id)
+  return redirect('/subscriptions')
+
+@app.route('/create_sub', methods=['POST'])
+@requires_auth
+def create_sub():
+  autofetch.create_subscription(request.form)
+  return redirect('/subscriptions')
+
+@app.route("/subscriptions")
+@requires_auth
+def subscriptions():
+  subs = database.subscriptions()
+  return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo())
 
 # Serve Static Assets
 @app.route('/assets/<path:filename>')

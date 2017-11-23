@@ -36,14 +36,17 @@
     </h1>
 
     {% include "shared/_filters.html" %}
-    {% block body %}{% endblock %}
+
+    <div class="js-body-content">
+      {% block body %}{% endblock %}
+    </div>
 
     <div style="text-align: center">
       <p>
       {% if userinfo is defined %}
         {{ userinfo[0] }} / Up: {{ userinfo[1] }} / Down: {{ userinfo[2] }} / Ratio: {{ userinfo[3] }} / Required: {{ userinfo[4] }} /
       {% endif %}
-        <a href="/settings">Settings</a>
+        <a href="/snatches">Snatches</a> / <a href="/settings">Settings</a> / <a href="/subscriptions">Subscriptions</a>
       </p>
   </div>
   </div>

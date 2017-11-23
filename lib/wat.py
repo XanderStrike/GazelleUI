@@ -32,27 +32,27 @@ def get_artist(query):
     info = handle().request('artist', artistname=query)['response']
     return handle_artist_results(info)
   except whatapi.whatapi.RequestException:
-    return "I should really do something here"
+    return "no data"
 
 def get_group(group_id):
   try:
     return handle().request('torrentgroup', id=group_id)['response']['group']
   except:
-    return "I should really do something here"
+    return "no data"
 
 def browse(searchstr):
   try:
     info = handle().request('browse', searchstr=searchstr)['response']
     return handle_browse_results(info)
   except:
-    return "I should really do something here"
+    return "no data"
 
 def label(searchstr):
   try:
     info = handle().request('browse', recordlabel=searchstr)['response']
     return handle_browse_results(info)
   except:
-    return "I should really do something here"
+    return "no data"
 
 def download_link(torrent_id):
   domain = settings.get('domain')[1]

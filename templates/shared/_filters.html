@@ -10,14 +10,14 @@
 
   <div class="js-advanced-search advanced-search">
     <h4>Other Search Types</h4>
-    <form action="/browse" method="get">
+    <form class="js-search" action="/browse" method="get">
       <div class="row">
         <div class="twelve columns">
           <input style="text-align:center;" class="u-full-width" type="search" placeholder="Search Title" name="q">
         </div>
       </div>
     </form>
-    <form action="/label" method="get">
+    <form class="js-search" action="/label" method="get">
       <div class="row">
         <div class="twelve columns">
           <input style="text-align:center;" class="u-full-width" type="search" placeholder="Search Label" name="q">
@@ -28,5 +28,5 @@
 </div>
 
 <div class="js-search-loading search-loading">
-  <img src="assets/spinner.svg" width="50px" />
+  <div class="loader">Loading...</div>
 </div>
