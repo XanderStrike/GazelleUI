@@ -17,8 +17,8 @@ def queue(data):
 
   database.update(query)
 
-def exists(id):
-  query = 'select id from torrents where id = "' + str(id) + '"'
+def exists(id, artist, album):
+  query = 'select id from torrents where id = "' + str(id) + '" or artist = "' + artist + '" and album = "' + album + '"'
   return database.fetch(query) != []
 
 def download_all():
