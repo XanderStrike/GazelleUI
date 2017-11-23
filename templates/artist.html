@@ -62,6 +62,12 @@
                 <td width=25%>
                   {{ torrent.displayTitle }}<br>
                   {{ torrent.media }} / {{ torrent.format }} {{ torrent.encoding }}
+                  {% if torrent.hasLog %}
+                    / {{ torrent.logScore }}%
+                  {% endif %}
+                  {% if torrent.hasCue %}
+                    / Cue
+                  {% endif %}
                 </td>
                 <td>{{ torrent.fileCount }}</td>
                 <td class='small-up-column'>{{ torrent.size }}</td>
