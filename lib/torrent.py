@@ -1,6 +1,7 @@
 import database as database
 import wat as wat
 import settings as settings
+import discord as discord
 import json
 
 import urllib2
@@ -25,6 +26,8 @@ def download_all():
   torrents = database.row_fetch('select * from torrents where downloaded = 0')
   for t in torrents:
     download_torrent(t[0])
+    print 'Downloaded ' + t[0] + '.torrent -- ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4]
+    discord.send('Downloaded ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4])
 
 def download_torrent(torrent_id):
   download_link = wat.download_link(torrent_id)
