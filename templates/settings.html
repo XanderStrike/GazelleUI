@@ -66,6 +66,17 @@
       <input class="u-full-width" id="port" type="text" name="value_2" value="{{ settings.network[2] }}">
       <input class="button u-pull-right" type="submit" value="Save">
     </form>
+
+    <h4>Discord Integration</h4>
+    <p>Post to this webhook URL when a download starts.</p>
+    <form action="/settings" method="post">
+      <input type="hidden" value="discord" name="setting">
+      <input type="hidden" value="" name="value_2">
+      <label for="url">URL</label>
+      <input class="u-full-width" type="text" id="url" name="value_1" value="{{ settings.discord[1] }}">
+
+      <input class="button u-pull-right" type="submit" value="Save">
+    </form>
   </div>
 </div>
 
