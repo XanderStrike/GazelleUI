@@ -14,6 +14,7 @@ If you've got it, [Docker](https://www.docker.com/) is the best way to run Gazel
       --name=gazelleui \
       --restart always \
       -v <path to watchfolder>:/torrents \
+      -v <path to config>:/app/config \
       -e PGID=1000 -e PUID=1000  \
       -e TZ=America/Los_Angeles \
       -p 2020:2020 \

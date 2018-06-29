@@ -44,12 +44,12 @@ DEFAULT_SETTINGS = [
   ['what_credentials', '', ''],
   ['webui_credentials', '', ''],
   ['network', '0.0.0.0', '2020'],
-  ['torrent', 'torrents/', ''],
+  ['torrent', '/torrents/', ''],
   ['domain', 'https://apollo.rip', ''],
   ['discord', '', '']
 ]
 
-DB = 'data.sqlite3'
+DB = 'config/data.sqlite3'
 
 def init():
   con = lite.connect(DB)
