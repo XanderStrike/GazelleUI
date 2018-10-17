@@ -30,10 +30,10 @@ class Config(object):
 app = Flask(__name__)
 app.config.from_object(Config())
 
-if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-  scheduler = APScheduler()
-  scheduler.init_app(app)
-  scheduler.start()
+# if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
 
 # Initialize Database
@@ -129,4 +129,4 @@ def catch_all(filename):
 # It's Go Time
 if __name__ == "__main__":
   network_settings = settings.get('network')
-  app.run(host=network_settings[1], port=int(network_settings[2]))
+  app.run(host=network_settings[1], port=int(network_settings[2]), use_reloader=False, debug=False)
