@@ -1,5 +1,5 @@
 import requests
-import settings as settings
+from . import settings as settings
 
 def send(message):
   url = settings.get('discord')[1]

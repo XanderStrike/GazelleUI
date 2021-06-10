@@ -1,6 +1,6 @@
-import database
-import torrent
-import wat
+from . import database
+from . import torrent
+from . import wat
 
 def word_to_type(release_type):
   mapping = {
@@ -32,27 +32,27 @@ def create_subscription(data):
 
 def enqueue(data):
   if not torrent.exists(data['id'], data['artist'], data['album']):
-    print "Downloading"
+    print("Downloading")
     torrent.queue(data)
   else:
-    print "Skipping, already downloaded"
+    print("Skipping, already downloaded")
 
 def fetch_new_torrents(sub):
-  print sub['search_type'] + ' search for "' + sub['term'] + \
-    '" with quality ' + sub['quality'] + ' and release type ' + str(sub['release_type'])
+  print(sub['search_type'] + ' search for "' + sub['term'] + \
+    '" with quality ' + sub['quality'] + ' and release type ' + str(sub['release_type']))
 
   if sub['search_type'] == 'artist':
     data = wat.get_artist(sub['term'])
 
     if data == 'no data':
-      print 'Nothing found'
+      print('Nothing found')
       return
 
     for group in data['torrentgroup']:
       if int(group['releaseType']) == int(sub['release_type']):
         for t in group['torrent']:
           if t['encoding'] == sub['quality']:
-            print "Found " + group['groupName'] + ' (' + str(t['id']) + ')'
+            print("Found " + group['groupName'] + ' (' + str(t['id']) + ')')
             t.update({
               'artist': data['name'],
               'album': group['groupName']
@@ -66,7 +66,7 @@ def fetch_new_torrents(sub):
       if word_to_type(res['releaseType']) == int(sub['release_type']):
         for t in res['torrents']:
           if t['encoding'] == sub['quality']:
-            print 'Found ' + res['groupName']
+            print('Found ' + res['groupName'])
             t.update({
               'artist': res['artist'],
               'album': res['groupName']

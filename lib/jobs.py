@@ -1,6 +1,6 @@
-import torrent as torrent
-import wat as wat
-import autofetch as af
+from . import torrent as torrent
+from . import wat as wat
+from . import autofetch as af
 
 def job_list():
   return [
@@ -28,7 +28,7 @@ def download_torrents():
   torrent.download_all()
 
 def update_user():
-  print 'Updating user info'
+  print('Updating user info')
   wat.refresh_user_info()
 
 def autofetch():

@@ -54,7 +54,7 @@ DB = 'config/data.sqlite3'
 def init():
   con = lite.connect(DB)
 
-  for k in SCHEMA.keys():
+  for k in list(SCHEMA.keys()):
     con.cursor().execute("create table if not exists " + k + "(" + ", ".join(SCHEMA[k]) + ");")
 
   for setting in DEFAULT_SETTINGS:

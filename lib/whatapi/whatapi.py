@@ -1,5 +1,5 @@
 try:
-    from ConfigParser import ConfigParser
+    from configparser import ConfigParser
 except ImportError:
     import configparser as ConfigParser # py3k support
 import requests

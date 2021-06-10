@@ -1,7 +1,7 @@
-import whatapi
-import settings as settings
-import torrent as torrents
-import database as database
+from . import whatapi
+from . import settings as settings
+from . import torrent as torrents
+from . import database as database
 
 import json
 
@@ -74,11 +74,7 @@ def refresh_user_info():
 
 # Massaging
 def handle_browse_results(info):
-  try:
-    snatched_torrents = list(zip(*torrents.get_all_ids())[0])
-  except IndexError:
-    snatched_torrents = []
-
+  snatched_torrents = []
 
   for res in info.get('results'):
     for torrent in res.get('torrents'):
@@ -101,10 +97,7 @@ def handle_browse_results(info):
 
 
 def handle_artist_results(info):
-  try:
-    snatched_torrents = list(zip(*torrents.get_ids_for_artist(info['name']))[0])
-  except IndexError:
-    snatched_torrents = []
+  snatched_torrents = []
 
   for group in info.get("torrentgroup", []):
     for torrent in group.get("torrent", []):

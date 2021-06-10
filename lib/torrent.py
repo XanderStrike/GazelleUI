@@ -1,10 +1,10 @@
-import database as database
-import wat as wat
-import settings as settings
-import discord as discord
+from . import database as database
+from . import wat as wat
+from . import settings as settings
+from . import discord as discord
 import json
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 def queue(data):
   query = 'insert into torrents(id, artist, album, release, quality, added, downloaded) values ("' + \
@@ -26,7 +26,7 @@ def download_all():
   torrents = database.row_fetch('select * from torrents where downloaded = 0')
   for t in torrents:
     download_torrent(t[0])
-    print 'Downloaded ' + t[0] + '.torrent -- ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4]
+    print('Downloaded ' + t[0] + '.torrent -- ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4])
     discord.send('Downloaded ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4])
 
 def download_torrent(torrent_id):
@@ -34,7 +34,7 @@ def download_torrent(torrent_id):
   download_path = settings.get('torrent')[1]
   save_to = download_path + torrent_id + ".torrent"
 
-  opener = urllib2.build_opener()
+  opener = urllib.request.build_opener()
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]
   torrent = opener.open(download_link).read()
 
@@ -42,7 +42,7 @@ def download_torrent(torrent_id):
   output.write(torrent)
   output.close()
 
-  print "Downloaded " + torrent_id + ".torrent"
+  print("Downloaded " + torrent_id + ".torrent")
   database.update('update torrents set downloaded = 1 where id = "' + torrent_id + '"')
 
 def get_recent():

@@ -38,7 +38,7 @@ Download or clone this repository.
 Set up the prerequisites and run:
 
     sudo apt-get update
-    sudo apt-get install wget python-pip
+    sudo apt-get install wget python3-pip
     sudo pip install -r requirements.txt
     python GazelleUI.py
 
