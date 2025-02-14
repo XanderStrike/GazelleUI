@@ -45,7 +45,7 @@ DEFAULT_SETTINGS = [
   ['webui_credentials', '', ''],
   ['network', '0.0.0.0', '2020'],
   ['torrent', '/torrents/', ''],
-  ['domain', 'https://apollo.rip', ''],
+  ['domain', 'https://redacted.sh', ''],
   ['discord', '', '']
 ]
 
