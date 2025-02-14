@@ -1,84 +1,105 @@
 // Search
-$('.js-more-search').on('click', function() {
-  $('.js-advanced-search').slideToggle();
+document.querySelector('.js-more-search')?.addEventListener('click', function() {
+  const advSearch = document.querySelector('.js-advanced-search');
+  advSearch.style.display = advSearch.style.display === 'none' ? 'block' : 'none';
 });
 
-$('.js-search').on('submit', function() {
-  $('.js-search-box').hide();
-  $('.js-body-content').hide();
-  $('.js-search-loading').fadeIn();
-})
+document.querySelector('.js-search')?.addEventListener('submit', function() {
+  document.querySelector('.js-search-box').style.display = 'none';
+  document.querySelector('.js-body-content').style.display = 'none';
+  document.querySelector('.js-search-loading').style.display = 'block';
+});
 
 // Release Filters
 function do_filters() {
-  var regex = new RegExp($('.js-text-filter').val(), "i");
-  var rows = $('.js-release');
-  var type = $('.js-type-filter').val();
-  rows.each(function (index) {
-    title = $(this).children(".js-title").html()
-    if (title.search(regex) != -1 && (type == '0' || type == undefined || $(this).hasClass("js-release-type-" + type))) {
-      $(this).show();
+  const regex = new RegExp(document.querySelector('.js-text-filter')?.value || '', "i");
+  const rows = document.querySelectorAll('.js-release');
+  const type = document.querySelector('.js-type-filter')?.value;
+  
+  rows.forEach(row => {
+    const title = row.querySelector(".js-title").innerHTML;
+    if (title.search(regex) !== -1 && (type === '0' || type === undefined || row.classList.contains("js-release-type-" + type))) {
+      row.style.display = '';
     } else {
-      $(this).hide();
+      row.style.display = 'none';
     }
   });
 }
 
-$('.js-type-filter').change(do_filters)
-$('.js-text-filter').keyup(do_filters);
-$(document).ready(do_filters);
+document.querySelector('.js-type-filter')?.addEventListener('change', do_filters);
+document.querySelector('.js-text-filter')?.addEventListener('keyup', do_filters);
+document.addEventListener('DOMContentLoaded', do_filters);
 
 // Fetch
-$('.js-download').click(function() {
-  $elem = $(this);
-  $.post($elem.attr('href'), { 'data': $elem.attr('torrentInfo') }, function( data ) {
-    $elem.replaceWith(data);
+document.querySelectorAll('.js-download').forEach(elem => {
+  elem.addEventListener('click', function(e) {
+    e.preventDefault();
+    fetch(this.getAttribute('href'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'data=' + encodeURIComponent(this.getAttribute('torrentInfo'))
+    })
+    .then(response => response.text())
+    .then(data => {
+      this.outerHTML = data;
+    });
+    return false;
   });
-  return false;
 });
 
 // Artist Info
-$('.js-desc-more-link').click(function() {
-  $('.js-artist-desc').css('max-height', 'none');
-  $('.js-desc-less-link').show();
-  $(this).hide();
-  return false;
+document.querySelector('.js-desc-more-link')?.addEventListener('click', function(e) {
+  e.preventDefault();
+  document.querySelector('.js-artist-desc').style.maxHeight = 'none';
+  document.querySelector('.js-desc-less-link').style.display = 'block';
+  this.style.display = 'none';
 });
 
-$('.js-desc-less-link').click(function() {
-  $('.js-artist-desc').css('max-height', '190px');
-  $('.js-desc-more-link').show();
-  $(this).hide();
-  return false;
+document.querySelector('.js-desc-less-link')?.addEventListener('click', function(e) {
+  e.preventDefault();
+  document.querySelector('.js-artist-desc').style.maxHeight = '190px';
+  document.querySelector('.js-desc-more-link').style.display = 'block';
+  this.style.display = 'none';
 });
 
 // Expand Torrents
-$('.js-torrent-more-link').click(function() {
-  $elem = $(this);
-  $elem.hide();
-  $('.js-torrent-container-' + $elem.attr('groupId')).css('max-height', 'none');
-  return false;
+document.querySelectorAll('.js-torrent-more-link').forEach(elem => {
+  elem.addEventListener('click', function(e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.querySelector('.js-torrent-container-' + this.getAttribute('groupId')).style.maxHeight = 'none';
+  });
 });
 
 // Release Info
-$('.js-more-info').click(function() {
-  $elem = $(this);
-  group_id = $elem.attr('groupId');
-  if (!$.trim( $('.js-more-info-' + $elem.attr('groupId')).html() ).length) {
-    $.get($elem.attr('href'), function( data ) {
-      $('.js-more-info-' + $elem.attr('groupId')).html(data);
-    });
-  }
-  $elem.hide();
-  $('.js-more-info-' + $elem.attr('groupId')).show();
-  $('.js-less-info[groupId=' + group_id + ']').show();
-  return false;
+document.querySelectorAll('.js-more-info').forEach(elem => {
+  elem.addEventListener('click', function(e) {
+    e.preventDefault();
+    const groupId = this.getAttribute('groupId');
+    const infoContainer = document.querySelector('.js-more-info-' + groupId);
+    
+    if (!infoContainer.innerHTML.trim()) {
+      fetch(this.getAttribute('href'))
+        .then(response => response.text())
+        .then(data => {
+          infoContainer.innerHTML = data;
+        });
+    }
+    
+    this.style.display = 'none';
+    infoContainer.style.display = 'block';
+    document.querySelector(`.js-less-info[groupId="${groupId}"]`).style.display = 'block';
+  });
 });
 
-$('.js-less-info').click(function() {
-  $elem = $(this);
-  $elem.hide();
-  $('.js-more-info[groupId=' + group_id + ']').show();
-  $('.js-more-info-' + $elem.attr('groupId')).hide();
-  return false;
+document.querySelectorAll('.js-less-info').forEach(elem => {
+  elem.addEventListener('click', function(e) {
+    e.preventDefault();
+    const groupId = this.getAttribute('groupId');
+    this.style.display = 'none';
+    document.querySelector(`.js-more-info[groupId="${groupId}"]`).style.display = 'block';
+    document.querySelector('.js-more-info-' + groupId).style.display = 'none';
+  });
 });
