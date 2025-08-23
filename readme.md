@@ -29,6 +29,8 @@ Run with:
 
     docker start gazelleui
 
+There's also a docker-compose.yml if you prefer that.
+
 ### Without Docker or for Development
 
 GazelleUI is designed with seedboxes in mind. These instructions are for Ubuntu, but it'll run on most any linux or osx box.
