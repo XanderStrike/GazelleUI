@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  gazelleui:
+    build: .
+    ports:
+      - "2020:2020"
+    volumes:
+      - ./config:/app/config
+      - ./torrents:/torrents
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
