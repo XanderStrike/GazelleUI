@@ -2,6 +2,7 @@ from . import whatapi
 from . import settings as settings
 from . import torrent as torrents
 from . import database as database
+from .whatapi.whatapi import RequestException, LoginException
 
 import json
 
@@ -18,8 +19,17 @@ def handle():
       return apihandle
     apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2], domain=domain)
     return apihandle
-  except:
-    raise Exception('Something went wrong connecting to WhatCD. Ensure that it is up and running, and that your credentials are correct.')
+  except RequestException as e:
+    if hasattr(e, 'response') and e.response is not None:
+        status_code = e.response.status_code
+        body = e.response.text
+        raise Exception(f'Request to WhatCD failed with status code {status_code}. Response: {body}')
+    else:
+        raise Exception(f'Request to WhatCD failed: {str(e)}')
+  except LoginException as e:
+    raise Exception(f'Login to WhatCD failed: {str(e)}')
+  except Exception as e:
+    raise Exception(f'Something went wrong connecting to WhatCD: {str(e)}')
 
 def bust_handle_cache():
   global apihandle
