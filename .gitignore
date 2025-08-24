@@ -1,3 +1,7 @@
 *.sqlite3
 *.torrent
 *.pyc
+
+config/transmission
+downloads
+torrents
