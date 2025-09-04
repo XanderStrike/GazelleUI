@@ -90,6 +90,8 @@ document.querySelectorAll('.js-more-info').forEach(elem => {
         .then(response => response.text())
         .then(data => {
           infoContainer.innerHTML = data;
+          // Add event listeners to any new expandable images
+          addExpandableImageListeners(infoContainer);
         })
         .catch(error => {
           infoContainer.innerHTML = '<div class="error">Failed to load info</div>';
@@ -101,3 +103,47 @@ document.querySelectorAll('.js-more-info').forEach(elem => {
     }
   });
 });
+
+// Function to add expandable image listeners to elements
+function addExpandableImageListeners(container = document) {
+  container.querySelectorAll('.expandable-image').forEach(img => {
+    // Only add listener if not already added
+    if (!img.hasAttribute('data-expandable-listener')) {
+      img.setAttribute('data-expandable-listener', 'true');
+      img.addEventListener('click', function() {
+        // Create overlay if it doesn't exist
+        let overlay = document.querySelector('.image-overlay');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.className = 'image-overlay';
+          document.body.appendChild(overlay);
+          
+          // Add click event to close overlay
+          overlay.addEventListener('click', function() {
+            this.classList.remove('expanded');
+          });
+        }
+        
+        // Create and add the expanded image
+        const expandedImg = document.createElement('img');
+        expandedImg.src = this.src;
+        expandedImg.alt = this.alt || 'Expanded image';
+        
+        // Clear previous content and add new image
+        overlay.innerHTML = '';
+        overlay.appendChild(expandedImg);
+        
+        // Show the overlay
+        overlay.classList.add('expanded');
+        
+        // Prevent event bubbling
+        expandedImg.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      });
+    }
+  });
+}
+
+// Initial setup for expandable images
+addExpandableImageListeners();

@@ -225,3 +225,39 @@ table {
     box-shadow: 0 2.5em 0 0;
   }
 }
+
+/* Image expansion styles */
+.expandable-image {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.expandable-image:hover {
+  transform: scale(1.02);
+}
+
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.image-overlay.expanded {
+  display: flex;
+}
+
+.image-overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
