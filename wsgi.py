@@ -1,4 +1,4 @@
-from WhatUI import app
+from GazelleUI import app
 
 if __name__ == "__main__":
   app.run()
