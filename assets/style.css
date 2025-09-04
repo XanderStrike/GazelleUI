@@ -85,8 +85,74 @@ table {
 }
 
 .torrent-container {
-  max-height: 275px;
-  overflow: hidden;
+  overflow: auto;
+  padding-top: 10px;
+}
+
+/* Optimized table spacing */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 6px 8px !important;
+  text-align: left;
+  border-bottom: 1px solid #7a3a3a;
+  line-height: 1.2;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 600;
+  background-color: #4a2222;
+  white-space: nowrap;
+}
+
+td {
+  font-size: 1.25rem;
+}
+
+/* Reduce spacing in torrent info cells */
+.torrent-container td {
+  padding: 4px 6px !important;
+}
+
+/* Compact button styling */
+.torrent-container .button {
+  padding: 2px 8px !important;
+  font-size: 0.8rem !important;
+  height: 24px !important;
+  line-height: 20px !important;
+  margin: 0 !important;
+}
+
+/* Optimized torrent info layout */
+.torrent-info {
+  line-height: 1.2;
+}
+
+.torrent-title {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.torrent-details {
+  font-size: 0.8rem;
+  color: #ccc;
+  line-height: 1.1;
+}
+
+/* Remove bottom margin from table rows */
+tr {
+  margin: 0;
+  padding: 0;
+}
+
+/* Reduce table row height */
+tbody tr {
+  height: auto;
+  min-height: 32px;
 }
 
 .brand-link {

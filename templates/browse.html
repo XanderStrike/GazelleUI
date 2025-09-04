@@ -12,14 +12,18 @@
           {% for torrent in res.torrents %}
             <tr>
               <td>
-                {{ torrent.displayTitle }}<br>
-                {{ torrent.media }} / {{ torrent.format }} {{ torrent.encoding }}
-                {% if torrent.hasLog %}
-                  / {{ torrent.logScore }}%
-                {% endif %}
-                {% if torrent.hasCue %}
-                  / Cue
-                {% endif %}
+                <div class="torrent-info">
+                  <div class="torrent-title">{{ torrent.displayTitle }}</div>
+                  <div class="torrent-details">
+                    {{ torrent.media }} / {{ torrent.format }} {{ torrent.encoding }}
+                    {% if torrent.hasLog %}
+                      / {{ torrent.logScore }}%
+                    {% endif %}
+                    {% if torrent.hasCue %}
+                      / Cue
+                    {% endif %}
+                  </div>
+                </div>
               </td>
               <td>{{ torrent.fileCount }}</td>
               <td class='small-up-column'>{{ torrent.size }}</td>
@@ -39,9 +43,6 @@
         </table>
       </div>
 
-      <div class="u-full-width desc-more">
-        <a href="" groupId="{{ res.groupId }}" class="js-torrent-more-link">More</a>
-      </div>
       <hr>
     </div>
   {% endfor %}

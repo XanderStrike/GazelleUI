@@ -64,14 +64,6 @@ document.querySelector('.js-desc-less-link')?.addEventListener('click', function
   this.style.display = 'none';
 });
 
-// Expand Torrents
-document.querySelectorAll('.js-torrent-more-link').forEach(elem => {
-  elem.addEventListener('click', function(e) {
-    e.preventDefault();
-    this.style.display = 'none';
-    document.querySelector('.js-torrent-container-' + this.getAttribute('groupId')).style.maxHeight = 'none';
-  });
-});
 
 // Release Info
 document.querySelectorAll('.js-more-info').forEach(elem => {

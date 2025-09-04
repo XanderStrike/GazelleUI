@@ -132,7 +132,7 @@ def make_artist_title(group, torrent):
     if group.get("groupRecordLabel") != '':
       torrent['displayTitle'] += " / " + group.get("groupRecordLabel")
   else:
-    torrent['displayTitle'] = torrent.get('remasterTitle') + " / "
+    torrent['displayTitle'] = str(torrent.get('remasterYear')) + " / "
     torrent['displayTitle'] += torrent.get('remasterRecordLabel')
 
 def make_browse_title(torrent):
