@@ -24,8 +24,6 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     restart: unless-stopped
-    depends_on:
-      - transmission
 ```
 
 * Set the watchfolder to a directory watched by your torrent client
