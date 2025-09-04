@@ -1,6 +1,8 @@
 ![](https://i.imgur.com/rRBAXAU.png)
 
-GazelleUI is a web based torrent manager a-la CouchPotato, Headphones, or SickRage, but just for [Gazelle](https://github.com/WhatCD/Gazelle) based music trackers (such as APL or PTH). It serves as a web wrapper for Gazelle's API, and downloads torrents into a folder that can be 'watched' by any torrent client for instant downloading.
+GazelleUI is a web based torrent manager for music, like Lidarr, specifically for Gazelle based music trackers (such as ~~WhatCD~~, ~~APL~~, ~~PTH~~, RED). 
+
+It is simply a wrapper for your tracker's API. Search for an artist or album, snatch your preferred quality, and the torrent will be downloaded to a watchfolder.
 
 It's minimal, it's fast, and it works on your phone. What more do you want.
 
@@ -8,28 +10,30 @@ It's minimal, it's fast, and it works on your phone. What more do you want.
 
 ## Installation
 
-If you've got it, [Docker](https://www.docker.com/) is the best way to run GazelleUI.
+Docker/podman compose is the recommended way to run GazelleUI.
 
-    docker create \
-      --name=gazelleui \
-      --restart always \
-      -v <path to watchfolder>:/torrents \
-      -v <path to config>:/app/config \
-      -e PGID=1000 -e PUID=1000  \
-      -e TZ=America/Los_Angeles \
-      -p 2020:2020 \
-      xanderstrike/gazelleui
+```yaml
+services:
+  gazelleui:
+    image: xanderstrike/gazelleui
+    ports:
+      - "2020:2020"
+    volumes:
+      - ./config:/app/config
+      - ./torrents:/torrents
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    depends_on:
+      - transmission
+```
 
 * Set the watchfolder to a directory watched by your torrent client
 * PGID and PUID can be found by running `id` in a terminal
 * Timezone is your timezone
 * Configure the port by setting `2020:2020` to `<your port>:2020`
 
-Run with:
-
-    docker start gazelleui
-
-There's also a docker-compose.yml if you prefer that.
+See [docker-compose.yml](docker-compose.yml) for an example running with a companion transmission.
 
 ### Without Docker or for Development
 
@@ -43,7 +47,6 @@ Set up the prerequisites and run:
     sudo apt-get install wget python3-pip
     sudo pip install -r requirements.txt
     python GazelleUI.py
-
 
 Then visit `<ip-address>:2020` to set it up!
 
