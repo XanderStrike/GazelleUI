@@ -98,17 +98,6 @@ document.querySelectorAll('.js-more-info').forEach(elem => {
     } else {
       this.style.display = 'none';
       infoContainer.style.display = 'block';
-      document.querySelector(`.js-less-info[groupId="${groupId}"]`).style.display = 'block';
     }
-  });
-});
-
-document.querySelectorAll('.js-less-info').forEach(elem => {
-  elem.addEventListener('click', function(e) {
-    e.preventDefault();
-    const groupId = this.getAttribute('groupId');
-    this.style.display = 'none';
-    document.querySelector(`.js-more-info[groupId="${groupId}"]`).style.display = 'block';
-    document.querySelector('.js-more-info-' + groupId).style.display = 'none';
   });
 });

@@ -63,6 +63,27 @@ table {
   margin-bottom: 20px;
 }
 
+.release-info-link {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.js-release {
+  background-color: #5a2a2a;
+  border: 1px solid #7a3a3a;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.js-release h2.js-title {
+  margin-top: 0;
+  color: #fff;
+  border-bottom: 1px solid #7a3a3a;
+  padding-bottom: 10px;
+}
+
 .torrent-container {
   max-height: 275px;
   overflow: hidden;
@@ -137,6 +158,13 @@ table {
   border: 1px solid #E3E3E3;
   color: #888;
   cursor: not-allowed;
+}
+
+.button-small {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
 }
 
 
