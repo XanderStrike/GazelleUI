@@ -17,9 +17,6 @@ import lib.autofetch as autofetch
 
 import json
 
-# import logging
-# logging.basicConfig()
-
 # Configure Scheduler
 class Config(object):
     JOBS = jobs.job_list()
@@ -29,22 +26,33 @@ class Config(object):
 
 app = Flask(__name__)
 app.config.from_object(Config())
-app.secret_key = os.urandom(12)
 
 # Make session available in all templates
 @app.context_processor
 def inject_session():
     return dict(session=session)
 
-# if os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-
 # Initialize Database
 database.init()
 
+# Generate or retrieve secret key from database
+def get_or_create_secret_key():
+    try:
+        result = settings.get('secret_key')
+        if result and result[1]:
+            return result[1].encode('utf-8')
+    except:
+        pass
+
+    secret_key = os.urandom(24).hex()
+    settings.update({'setting': 'secret_key', 'value_1': secret_key, 'value_2': ''})
+    return secret_key.encode('utf-8')
+
+app.secret_key = get_or_create_secret_key()
 
 # Routes
 @app.route("/login", methods=['GET', 'POST'])
