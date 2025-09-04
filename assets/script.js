@@ -81,16 +81,25 @@ document.querySelectorAll('.js-more-info').forEach(elem => {
     const infoContainer = document.querySelector('.js-more-info-' + groupId);
     
     if (!infoContainer.innerHTML.trim()) {
+      // Show loading indicator
+      this.style.display = 'none';
+      infoContainer.innerHTML = '<div class="loader">Loading...</div>';
+      infoContainer.style.display = 'block';
+      
       fetch(this.getAttribute('href'))
         .then(response => response.text())
         .then(data => {
           infoContainer.innerHTML = data;
+        })
+        .catch(error => {
+          infoContainer.innerHTML = '<div class="error">Failed to load info</div>';
+          document.querySelector(`.js-more-info[groupId="${groupId}"]`).style.display = 'block';
         });
+    } else {
+      this.style.display = 'none';
+      infoContainer.style.display = 'block';
+      document.querySelector(`.js-less-info[groupId="${groupId}"]`).style.display = 'block';
     }
-    
-    this.style.display = 'none';
-    infoContainer.style.display = 'block';
-    document.querySelector(`.js-less-info[groupId="${groupId}"]`).style.display = 'block';
   });
 });
 
