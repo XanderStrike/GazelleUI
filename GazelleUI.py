@@ -92,19 +92,6 @@ def artist():
   results = wat.get_artist(query)
   return render_template('artist.html', results=results, userinfo=database.userinfo())
 
-@app.route("/browse")
-@login_required
-def browse():
-  query = request.args['q']
-  results = wat.browse(query)
-  return render_template('browse.html', results=results, query=query, userinfo=database.userinfo())
-
-@app.route("/label")
-@login_required
-def label():
-  query = request.args['q']
-  results = wat.label(query)
-  return render_template('browse.html', results=results, query=query, userinfo=database.userinfo())
 
 @app.route("/want", methods=['POST'])
 @login_required

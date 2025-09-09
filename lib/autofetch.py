@@ -59,26 +59,7 @@ def fetch_new_torrents(sub):
             })
             enqueue(t)
             break
-  elif sub['search_type'] == 'label':
-    data = wat.label(sub['term'])
-
-    for res in data['results']:
-      if word_to_type(res['releaseType']) == int(sub['release_type']):
-        for t in res['torrents']:
-          if t['encoding'] == sub['quality']:
-            print('Found ' + res['groupName'])
-            t.update({
-              'artist': res['artist'],
-              'album': res['groupName']
-              })
-            enqueue(t)
-            break
-
+  
 def run():
   for sub in database.subscriptions():
     fetch_new_torrents(sub)
-
-
-
-
-

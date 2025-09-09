@@ -1,8 +1,3 @@
-// Search
-document.querySelector('.js-more-search')?.addEventListener('click', function() {
-  const advSearch = document.querySelector('.js-advanced-search');
-  advSearch.style.display = advSearch.style.display === 'none' ? 'block' : 'none';
-});
 
 document.querySelector('.js-search')?.addEventListener('submit', function() {
   document.querySelector('.js-search-box').style.display = 'none';

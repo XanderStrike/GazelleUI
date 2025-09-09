@@ -171,14 +171,6 @@ tbody tr {
   color:#000;
 }
 
-.more-search {
-  text-align: center;
-  cursor: pointer;
-}
-
-.advanced-search {
-  display: none;
-}
 
 .search-loading {
   text-align: center;

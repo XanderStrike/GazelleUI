@@ -50,20 +50,6 @@ def get_group(group_id):
   except:
     return "no data"
 
-def browse(searchstr):
-  try:
-    info = handle().request('browse', searchstr=searchstr)['response']
-    return handle_browse_results(info)
-  except:
-    return "no data"
-
-def label(searchstr):
-  try:
-    info = handle().request('browse', recordlabel=searchstr)['response']
-    return handle_browse_results(info)
-  except:
-    return "no data"
-
 def download_link(torrent_id):
   domain = settings.get('domain')[1]
   return domain + '/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
@@ -83,29 +69,6 @@ def refresh_user_info():
     )
 
 # Massaging
-def handle_browse_results(info):
-  snatched_torrents = []
-
-  for res in info.get('results'):
-    for torrent in res.get('torrents'):
-
-      if str(torrent.get('torrentId')) in snatched_torrents:
-        torrent['alreadySnatched'] = 1
-      else:
-        torrent['alreadySnatched'] = 0
-
-      make_browse_title(torrent)
-
-      torrent['id'] = torrent['torrentId']
-      torrent['size'] = human_readable(torrent['size'])
-      torrent['artist'] = res['artist']
-      torrent['album'] = res['groupName']
-
-      torrent['json'] = json.dumps(torrent)
-
-  return info
-
-
 def handle_artist_results(info):
   snatched_torrents = []
 
@@ -135,11 +98,6 @@ def make_artist_title(group, torrent):
     torrent['displayTitle'] = str(torrent.get('remasterYear')) + " / "
     torrent['displayTitle'] += torrent.get('remasterRecordLabel')
 
-def make_browse_title(torrent):
-  if torrent.get('remasterYear', 0) == 0:
-    torrent['displayTitle'] = "Original Release"
-  else:
-    torrent['displayTitle'] = torrent.get('remasterTitle')
 
 # http://stackoverflow.com/a/1094933/1855253
 def human_readable(size):
