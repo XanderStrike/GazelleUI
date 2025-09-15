@@ -5,8 +5,11 @@ from . import database as database
 from .whatapi.whatapi import RequestException, LoginException
 
 import json
+import time
 
 apihandle = None
+cache = {}
+CACHE_DURATION = 24 * 60 * 60  # 24 hours in seconds
 
 
 # Login stuff
@@ -35,18 +38,39 @@ def bust_handle_cache():
   global apihandle
   apihandle = None
 
+def bust_response_cache():
+  global cache
+  cache = {}
+
+def is_cache_valid(cache_key):
+  if cache_key not in cache:
+    return False
+  return time.time() - cache[cache_key]['timestamp'] < CACHE_DURATION
+
 
 # Fetching
 def get_artist(query):
+  cache_key = f"artist_{query}"
+  if is_cache_valid(cache_key):
+    return cache[cache_key]['data']
+
   try:
     info = handle().request('artist', artistname=query)['response']
-    return handle_artist_results(info)
+    result = handle_artist_results(info)
+    cache[cache_key] = {'data': result, 'timestamp': time.time()}
+    return result
   except whatapi.whatapi.RequestException:
     return "no data"
 
 def get_group(group_id):
+  cache_key = f"group_{group_id}"
+  if is_cache_valid(cache_key):
+    return cache[cache_key]['data']
+
   try:
-    return handle().request('torrentgroup', id=group_id)['response']['group']
+    result = handle().request('torrentgroup', id=group_id)['response']['group']
+    cache[cache_key] = {'data': result, 'timestamp': time.time()}
+    return result
   except:
     return "no data"
 
