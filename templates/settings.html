@@ -80,15 +80,23 @@
 
     <h4>Tokens</h4>
     <p>Use freelech tokens when available, you currently have {{ settings.use_tokens[2]|int }}</p>
-    <form action="/settings" method="post">
+    <form action="/settings" method="post" id="tokens-form">
       <input type="hidden" value="use_tokens" name="setting">
+      <input type="hidden" id="use-tokens-hidden" name="value_1" value="{% if settings.use_tokens[1] == 'true' %}true{% else %}false{% endif %}">
+      <input type="hidden" value="{{ settings.use_tokens[2] }}" name="value_2">
       <label for="use-tokens">
-        <input type="checkbox" id="use-tokens" name="value_1" value="true" {% if settings.use_tokens[1] == 'true' %}checked{% endif %}>
+        <input type="checkbox" id="use-tokens" {% if settings.use_tokens[1] == 'true' %}checked{% endif %}>
         Use Tokens
       </label>
 
       <input class="button u-pull-right" type="submit" value="Save">
     </form>
+
+    <script>
+      document.getElementById('use-tokens').addEventListener('change', function() {
+        document.getElementById('use-tokens-hidden').value = this.checked ? 'true' : 'false';
+      });
+    </script>
   </div>
 </div>
 
