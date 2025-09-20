@@ -37,6 +37,9 @@
       <p>
       {% if userinfo is defined %}
         {{ userinfo[0] }} / Up: {{ userinfo[1] }} / Down: {{ userinfo[2] }} / Ratio: {{ userinfo[3] }} / Required: {{ userinfo[4] }} /
+        {% if settings is defined and settings.use_tokens is defined and settings.use_tokens[2] %}
+          Tokens: {{ settings.use_tokens[2]|int }} /
+        {% endif %}
       {% endif %}
         <a href="/snatches">Snatches</a> / <a href="/settings">Settings</a> / <a href="/subscriptions">Subscriptions</a>
         {% if session.logged_in %}/ <a href="/logout">Logout</a>{% endif %}

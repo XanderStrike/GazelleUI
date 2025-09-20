@@ -77,6 +77,18 @@
 
       <input class="button u-pull-right" type="submit" value="Save">
     </form>
+
+    <h4>Tokens</h4>
+    <p>Use freelech tokens when available, you currently have {{ settings.use_tokens[2]|int }}</p>
+    <form action="/settings" method="post">
+      <input type="hidden" value="use_tokens" name="setting">
+      <label for="use-tokens">
+        <input type="checkbox" id="use-tokens" name="value_1" value="true" {% if settings.use_tokens[1] == 'true' %}checked{% endif %}>
+        Use Tokens
+      </label>
+
+      <input class="button u-pull-right" type="submit" value="Save">
+    </form>
   </div>
 </div>
 

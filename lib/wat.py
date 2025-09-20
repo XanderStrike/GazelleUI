@@ -76,10 +76,22 @@ def get_group(group_id):
 
 def download_link(torrent_id):
   domain = settings.get('domain')[1]
-  return domain + '/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
+  use_tokens_setting = settings.get('use_tokens')
+  token_count = use_tokens_setting[2] if use_tokens_setting[2] else '0'
+  use_tokens = use_tokens_setting[1] == 'true' and int(token_count) > 0
+
+  url = domain + '/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
+  if use_tokens:
+    url += '&usetoken=1'
+
+  print(url)
+
+  return url
 
 def refresh_user_info():
   info = handle().request('index')['response']
+
+  # Update main user info
   database.update("update user set username = '" + info['username'] + "', "
                   "upload = '" + human_readable(info['userstats']['uploaded']) + "', "
                   "download = '" + human_readable(info['userstats']['downloaded']) + "', "
@@ -91,6 +103,12 @@ def refresh_user_info():
                   "messages = '" + str(info['notifications']['messages']) + "', "
                   "newBlog = '" + str(info['notifications']['newBlog']) + "'"
     )
+
+  # Update token count
+  gift_tokens = info.get('giftTokens', 0)
+  merit_tokens = info.get('meritTokens', 0)
+  total_tokens = gift_tokens + merit_tokens
+  database.update("update settings set value_2 = '" + str(total_tokens) + "' where key = 'use_tokens'")
 
 # Massaging
 def handle_artist_results(info):
