@@ -46,7 +46,8 @@ DEFAULT_SETTINGS = [
   ['network', '0.0.0.0', '2020'],
   ['torrent', '/torrents/', ''],
   ['domain', 'https://redacted.sh', ''],
-  ['discord', '', '']
+  ['discord', '', ''],
+  ['use_tokens', 'false', '0']
 ]
 
 DB = 'config/data.sqlite3'
