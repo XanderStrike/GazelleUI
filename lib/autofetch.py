@@ -1,27 +1,29 @@
 from . import database
 from . import torrent
 from . import wat
+from enum import Enum
 
-def word_to_type(release_type):
-  mapping = {
-    'Album': 1,
-    'Soundtrack': 3,
-    'EP': 5,
-    'Anthology': 6,
-    'Compilation': 7,
-    'Single': 9,
-    'Live album': 11,
-    'Remix': 13,
-    'Bootleg': 14,
-    'Interview': 15,
-    'Mixtape': 16,
-    'Demo': 17,
-    'Concert Recording': 18,
-    'DJ Mix': 19,
-    'Unknown': 21
-  }
-
-  return mapping[release_type]
+# https://www.notinventedhere.org/articles/python/how-to-use-strings-as-name-aliases-in-python-enums.html
+mappings = Enum(
+    value='mappings',
+    names=[
+        ('Album', 1),
+        ('Soundtrack', 3),
+        ('EP', 5),
+        ('Anthology', 6),
+        ('Compilation', 7),
+        ('Single', 9),
+        ('Live album', 11),
+        ('Remix', 13),
+        ('Bootleg', 14),
+        ('Interview', 15),
+        ('Mixtape', 16),
+        ('Demo', 17),
+        ('Concert Recording', 18),
+        ('DJ Mix', 19),
+        ('Unknown', 21)
+    ]
+)
 
 def create_subscription(data):
   query = 'insert into subscriptions(search_type, term, quality, release_type) values (' + \
