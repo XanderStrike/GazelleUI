@@ -15,8 +15,10 @@ def word_to_type(release_type):
     'Bootleg': 14,
     'Interview': 15,
     'Mixtape': 16,
-    'Unknown': 21,
-    'Demo': 23
+    'Demo': 17,
+    'Concert Recording': 18,
+    'DJ Mix': 19,
+    'Unknown': 21
   }
 
   return mapping[release_type]
