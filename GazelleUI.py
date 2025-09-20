@@ -83,14 +83,14 @@ def index():
   if setting[1] == None or setting[1] == '':
     return render_template('settings.html', settings=settings.get_all(), message="Please set your whatcd username and password.", message_class="alert-error")
   torrents = torrent.get_recent()
-  return render_template('index.html', torrents=torrents, userinfo=database.userinfo())
+  return render_template('index.html', torrents=torrents, userinfo=database.userinfo(), settings=settings.get_all())
 
 @app.route("/artist")
 @login_required
 def artist():
   query = request.args['q']
   results = wat.get_artist(query)
-  return render_template('artist.html', results=results, userinfo=database.userinfo())
+  return render_template('artist.html', results=results, userinfo=database.userinfo(), settings=settings.get_all())
 
 
 @app.route("/want", methods=['POST'])
