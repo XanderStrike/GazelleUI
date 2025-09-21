@@ -17,21 +17,9 @@
   </select>
 
   <select name="release_type">
-    <option value="1">Albums</option>
-    <option value="3">Soundtracks</option>
-    <option value="5">EPs</option>
-    <option value="6">Anthologies</option>
-    <option value="7">Compilations</option>
-    <option value="9">Singles</option>
-    <option value="11">Live albums</option>
-    <option value="13">Remixs</option>
-    <option value="14">Bootlegs</option>
-    <option value="15">Interviews</option>
-    <option value="16">Mixtape</option>
-    <option value="17">Demo</option>
-    <option value="18">Concert Recording</option>
-    <option value="19">DJ Mix</option>
-    <option value="21">Unknown</option>
+    {% for mapping in mappings %}
+        <option value="{{mapping.value}}">{{mapping.name}}</option>
+    {% endfor %}
   </select>
 
   <input type="submit" class="button" value="Add Subscription">
@@ -53,10 +41,10 @@
   <tbody>
     {% for sub in subs %}
       <tr>
-        <td>{{ sub['search_type'] }}</td>
+        <td>{{ sub['search_type']|capitalize }}</td>
         <td>{{ sub['term'] }}</td>
         <td>{{ sub['quality'] }}</td>
-        <td>{{ sub['release_type'] }}</td>
+        <td>{{ mappings(sub['release_type']|int).name }}</td>
         <td><a href="/delete_sub/{{ sub['id'] }}">Delete</a></td>
       </tr>
     {% endfor %}

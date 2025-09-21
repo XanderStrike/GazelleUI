@@ -90,7 +90,7 @@ def index():
 def artist():
   query = request.args['q']
   results = wat.get_artist(query)
-  return render_template('artist.html', results=results, userinfo=database.userinfo(), settings=settings.get_all())
+  return render_template('artist.html', results=results, userinfo=database.userinfo(), settings=settings.get_all(), mappings=autofetch.mappings)
 
 
 @app.route("/want", methods=['POST'])
@@ -137,7 +137,7 @@ def create_sub():
 @login_required
 def subscriptions():
   subs = database.subscriptions()
-  return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo(), settings=settings.get_all())
+  return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo(), settings=settings.get_all(), mappings=autofetch.mappings)
 
 # Serve Static Assets
 @app.route('/assets/<path:filename>')
