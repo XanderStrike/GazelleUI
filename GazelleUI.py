@@ -119,7 +119,7 @@ def settings_path():
 @login_required
 def snatches():
   torrents = torrent.get_all()
-  return render_template('snatches.html', torrents=torrents, userinfo=database.userinfo())
+  return render_template('snatches.html', torrents=torrents, userinfo=database.userinfo(), settings=settings.get_all())
 
 @app.route('/delete_sub/<int:sub_id>')
 @login_required
@@ -137,7 +137,7 @@ def create_sub():
 @login_required
 def subscriptions():
   subs = database.subscriptions()
-  return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo(), mappings=autofetch.mappings)
+  return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo(), settings=settings.get_all(), mappings=autofetch.mappings)
 
 # Serve Static Assets
 @app.route('/assets/<path:filename>')
