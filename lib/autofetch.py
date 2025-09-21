@@ -26,11 +26,12 @@ mappings = Enum(
 )
 
 def create_subscription(data):
-  query = 'insert into subscriptions(search_type, term, quality, release_type) values (' + \
+  query = 'insert into subscriptions(search_type, term, quality, release_type, release_media) values (' + \
           '"' + data['search_type'] + '", ' + \
           '"' + data['term'] + '", ' + \
           '"' + data['quality'] + '", ' + \
-          '"' + data['release_type'] + '")'
+          '"' + data['release_type'] + '", ' + \
+          '"' + data['release_media'] + '")'
 
   database.update(query)
 
@@ -42,8 +43,9 @@ def enqueue(data):
     print("Skipping, already downloaded")
 
 def fetch_new_torrents(sub):
-  print(sub['search_type'] + ' search for "' + sub['term'] + \
-    '" with quality ' + sub['quality'] + ' and release type ' + str(sub['release_type']))
+  print(sub['search_type'].title() + ' search for "' + sub['term'] + \
+    '" with quality ' + sub['quality'] + ', release type ' + str(mappings(int(sub['release_type'])).name) + \
+    ', and release media ' + str(sub['release_media']))
 
   if sub['search_type'] == 'artist':
     data = wat.get_artist(sub['term'])
@@ -55,7 +57,7 @@ def fetch_new_torrents(sub):
     for group in data['torrentgroup']:
       if int(group['releaseType']) == int(sub['release_type']):
         for t in group['torrent']:
-          if t['encoding'] == sub['quality']:
+          if sub['quality'] in (t['encoding'], None) and sub['release_media'] in (t['media'], None):
             print("Found " + group['groupName'] + ' (' + str(t['id']) + ')')
             t.update({
               'artist': data['name'],

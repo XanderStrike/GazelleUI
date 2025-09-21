@@ -21,6 +21,18 @@
         <option value="{{mapping.value}}">{{mapping.name}}</option>
     {% endfor %}
   </select>
+  
+  <select name="release_media">
+    <option value="CD" selected>CD</option>
+    <option value="DVD">DVD</option>
+    <option value="Vinyl">Vinyl</option>
+    <option value="Soundboard">Soundboard</option>
+    <option value="SACD">SACD</option>
+    <option value="DAT">DAT</option>
+    <option value="Cassette">Cassette</option>
+    <option value="WEB">WEB</option>
+    <option value="Blu-Ray">Blu-Ray</option>
+  </select>
 
   <input type="submit" class="button" value="Add Subscription">
 </form>
@@ -35,6 +47,7 @@
       <th>Term</th>
       <th>Quality</th>
       <th>Release Type</th>
+      <th>Release Media</th>
       <th></th>
     </tr>
   </thead>
@@ -45,6 +58,7 @@
         <td>{{ sub['term'] }}</td>
         <td>{{ sub['quality'] }}</td>
         <td>{{ mappings(sub['release_type']|int).name }}</td>
+        <td>{{ sub['release_media'] }}</td>
         <td><a href="/delete_sub/{{ sub['id'] }}">Delete</a></td>
       </tr>
     {% endfor %}
