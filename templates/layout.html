@@ -37,7 +37,7 @@
       <p>
       {% if userinfo is defined %}
         {{ userinfo[0] }} / Up: {{ userinfo[1] }} / Down: {{ userinfo[2] }} / Ratio: {{ userinfo[3] }} / Required: {{ userinfo[4] }} /
-        {% if settings is defined and settings.use_tokens is defined and settings.use_tokens[2] %}
+        {% if settings is defined and settings.use_tokens is defined and settings.use_tokens[1] == "true" %}
           Tokens: {{ settings.use_tokens[2]|int }} /
         {% endif %}
       {% endif %}

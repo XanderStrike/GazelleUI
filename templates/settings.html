@@ -79,7 +79,7 @@
     </form>
 
     <h4>Tokens</h4>
-    <p>Use freelech tokens when available, you currently have {{ settings.use_tokens[2]|int }}</p>
+    <p>Use freeleech tokens when available, you currently have {{ settings.use_tokens[2]|int }}.</p>
     <form action="/settings" method="post" id="tokens-form">
       <input type="hidden" value="use_tokens" name="setting">
       <input type="hidden" id="use-tokens-hidden" name="value_1" value="{% if settings.use_tokens[1] == 'true' %}true{% else %}false{% endif %}">
