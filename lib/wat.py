@@ -3,6 +3,7 @@ from . import settings as settings
 from . import torrent as torrents
 from . import database as database
 from .whatapi.whatapi import RequestException, LoginException
+from requests.utils import cookiejar_from_dict
 
 import json
 import time
@@ -17,10 +18,14 @@ def handle():
   global apihandle
   try:
     setting = settings.get('what_credentials')
+    cookie = None
+    if settings.get('what_auth')[1]:
+        cookie = cookiejar_from_dict({"session":settings.get('what_auth')[1]})
+
     domain = settings.get('domain')[1]
     if apihandle != None:
       return apihandle
-    apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2], domain=domain)
+    apihandle = whatapi.WhatAPI(username=setting[1], password=setting[2], cookies=cookie, domain=domain)
     return apihandle
   except RequestException as e:
     if hasattr(e, 'response') and e.response is not None:

@@ -32,8 +32,13 @@
     </form>
 
     <h4>Tracker Credentials</h4>
-    <p>The username and password that you use to log in to the site.</p>
+    <p>How to log in to the site. Using a cookie will override the username and password.</p>
+    
     <form action="/settings" method="post">
+      <input type="hidden" value="what_auth" name="setting">
+      <label for="cookie">Session Cookie</label>
+      <input class="u-full-width" type="text" id="cookie" name="value_1" value="{{ settings.what_auth[1] }}">
+
       <input type="hidden" value="what_credentials" name="setting">
       <label for="username">Username</label>
       <input class="u-full-width" type="text" id="username" name="value_1" value="{{ settings.what_credentials[1] }}">

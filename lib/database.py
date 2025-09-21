@@ -42,6 +42,7 @@ SCHEMA = {
 
 DEFAULT_SETTINGS = [
   ['what_credentials', '', ''],
+  ['what_auth', '', ''],
   ['webui_credentials', '', ''],
   ['network', '0.0.0.0', '2020'],
   ['torrent', '/torrents/', ''],
