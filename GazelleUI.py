@@ -79,9 +79,10 @@ def logout():
 @app.route("/")
 @login_required
 def index():
-  setting = settings.get('what_credentials')
-  if setting[1] == None or setting[1] == '':
-    return render_template('settings.html', settings=settings.get_all(), message="Please set your whatcd username and password.", message_class="alert-error")
+  cred_setting = settings.get('what_credentials')
+  auth_setting = settings.get('what_auth')
+  if not auth_setting[1] and (not cred_setting[1] or not cred_setting[2]):
+    return render_template('settings.html', settings=settings.get_all(), message="Please set your tracker's session cookie, or username and password.", message_class="alert-error")
   torrents = torrent.get_recent()
   return render_template('index.html', torrents=torrents, userinfo=database.userinfo(), settings=settings.get_all())
 
