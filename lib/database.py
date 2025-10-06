@@ -36,7 +36,8 @@ SCHEMA = {
       'search_type',
       'term',
       'quality',
-      'release_type'
+      'release_type',
+      'release_media'
     ]
 }
 
@@ -58,6 +59,12 @@ def init():
 
   for k in list(SCHEMA.keys()):
     con.cursor().execute("create table if not exists " + k + "(" + ", ".join(SCHEMA[k]) + ");")
+
+    for c in SCHEMA[k]:
+        try:
+            con.cursor().execute("alter table " + k + " add column " + c.split()[0] + ";")
+        except:
+            continue
 
   for setting in DEFAULT_SETTINGS:
     con.cursor().execute("insert into settings(key, value_1, value_2) select '" + "', '".join(setting) + "' where not exists(select 1 from settings where key = '" + setting[0] + "')")
@@ -88,7 +95,7 @@ def userinfo():
   return fetch('select * from user')[0]
 
 def subscriptions():
-  res = fetch('select search_type, term, quality, release_type, id from subscriptions')
+  res = fetch('select search_type, term, quality, release_type, id, release_media from subscriptions')
   h = []
   for r in res:
     h.append({
@@ -96,7 +103,8 @@ def subscriptions():
       'term': r[1],
       'quality': r[2],
       'release_type': r[3],
-      'id': r[4]
+      'id': r[4],
+      'release_media': r[5]
       })
 
   return h
