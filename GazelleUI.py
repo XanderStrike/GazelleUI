@@ -3,6 +3,7 @@
 
 import os
 import sys
+from datetime import timedelta
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response, session
 from flask_apscheduler import APScheduler
@@ -23,6 +24,7 @@ class Config(object):
     SCHEDULER_VIEWS_ENABLED = True
     SCHEDULER_TIMEZONE = "America/Los_Angeles"
     DEBUG = True
+    PERMANENT_SESSION_LIFETIME = timedelta(days=365 * 10)  # 10 years
 
 app = Flask(__name__)
 app.config.from_object(Config())
@@ -59,16 +61,17 @@ app.secret_key = get_or_create_secret_key()
 def login():
     if not needs_auth():
         return redirect('/')
-    
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         if check_auth(username, password):
             session['logged_in'] = True
+            session.permanent = True
             return redirect('/')
         else:
             return render_template('login.html', error='Invalid credentials')
-    
+
     return render_template('login.html')
 
 @app.route("/logout")
