@@ -143,6 +143,15 @@ def subscriptions():
   subs = database.subscriptions()
   return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo(), settings=settings.get_all(), mappings=autofetch.mappings)
 
+# Support relative links from artist/album descriptions
+@app.route('/artist.php')
+@login_required
+def artist_redirect():
+  artistname = request.args.get('artistname')
+  if artistname:
+    return redirect(f'/artist?q={artistname}')
+  return redirect('/')
+
 # Serve Static Assets
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
