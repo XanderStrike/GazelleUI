@@ -30,13 +30,21 @@ def download_all():
     discord.send('Downloaded ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4])
 
 def download_torrent(torrent_id):
-  download_link = wat.download_link(torrent_id)
   download_path = settings.get('torrent')[1]
   save_to = download_path + torrent_id + ".torrent"
 
   opener = urllib.request.build_opener()
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-  torrent = opener.open(download_link).read()
+
+  # First attempt with token (if enabled in settings)
+  download_url = wat.download_link(torrent_id)
+  torrent = opener.open(download_url).read()
+
+  # Check if we ran out of tokens, retry without token
+  if b'You do not have any freeleech tokens left' in torrent:
+    print("No freeleech tokens left, retrying without token")
+    download_url = wat.download_link(torrent_id, use_token=False)
+    torrent = opener.open(download_url).read()
 
   output = open(save_to,'wb')
   output.write(torrent)

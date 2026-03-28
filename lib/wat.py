@@ -79,14 +79,17 @@ def get_group(group_id):
   except:
     return "no data"
 
-def download_link(torrent_id):
+def download_link(torrent_id, use_token=None):
   domain = settings.get('domain')[1]
-  use_tokens_setting = settings.get('use_tokens')
-  token_count = use_tokens_setting[2] if use_tokens_setting[2] else '0'
-  use_tokens = use_tokens_setting[1] == 'true' and int(token_count) > 0
+
+  # If use_token is explicitly specified, use that; otherwise check settings
+  if use_token is None:
+    use_tokens_setting = settings.get('use_tokens')
+    token_count = use_tokens_setting[2] if use_tokens_setting[2] else '0'
+    use_token = use_tokens_setting[1] == 'true' and int(token_count) > 0
 
   url = domain + '/torrents.php?action=download&id=' + torrent_id + '&authkey=' + handle().authkey + '&torrent_pass=' + handle().passkey
-  if use_tokens:
+  if use_token:
     url += '&usetoken=1'
 
   print(url)
