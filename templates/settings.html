@@ -5,6 +5,12 @@
   <p class="alert {{ message_class }}">{{ message }}</p>
 {% endif %}
 
+{% with flashes = get_flashed_messages(with_categories=true) %}
+  {% for category, text in flashes %}
+    <p class="alert {{ category }}">{{ text }}</p>
+  {% endfor %}
+{% endwith %}
+
 <div class="row">
   <div class="six columns">
     <h4>GazelleUI Credentials</h4>
@@ -85,6 +91,13 @@
       <input class="u-full-width" type="text" id="url" name="value_1" value="{{ settings.discord[1] }}">
 
       <input class="button u-pull-right" type="submit" value="Save">
+    </form>
+
+    <h4>API</h4>
+    <label for="api-key">API Key</label>
+    <input class="u-full-width" type="text" id="api-key" value="{{ settings.api_key[1] }}" readonly>
+    <form action="/settings/regenerate_api_key" method="post">
+      <input class="button u-pull-right" type="submit" value="Regenerate">
     </form>
 
     <h4>Tokens</h4>

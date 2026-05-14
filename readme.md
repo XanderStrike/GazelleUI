@@ -48,6 +48,10 @@ Set up the prerequisites and run:
 
 Then visit `<ip-address>:2020` to set it up!
 
+### api
+
+see [api.md](api.md).
+
 ### License
 
 MIT license

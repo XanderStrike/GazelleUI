@@ -5,10 +5,10 @@ import os
 import sys
 from datetime import timedelta
 
-from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response, session
+from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response, session, flash
 from flask_apscheduler import APScheduler
 
-from lib.auth import login_required, check_auth, needs_auth
+from lib.auth import login_required, check_auth, needs_auth, api_key_required, get_or_create_api_key, regenerate_api_key
 import lib.database as database
 import lib.settings as settings
 import lib.wat as wat
@@ -55,6 +55,48 @@ def get_or_create_secret_key():
     return secret_key.encode('utf-8')
 
 app.secret_key = get_or_create_secret_key()
+
+# Generate api key on first run
+get_or_create_api_key()
+
+
+def map_artist_results_for_api(results):
+  groups = []
+
+  for group in results.get('torrentgroup', []):
+    mapped_torrents = []
+    for t in group.get('torrent', []):
+      mapped_torrents.append({
+        'torrent_id': int(t.get('id')) if t.get('id') else None,
+        'media': t.get('media'),
+        'format': t.get('format'),
+        'encoding': t.get('encoding'),
+        'size': t.get('size'),
+        'snatched': t.get('snatched'),
+        'seeders': t.get('seeders'),
+        'leechers': t.get('leechers'),
+        'display_title': t.get('displayTitle'),
+        'time': t.get('time'),
+        'already_snatched': bool(t.get('alreadySnatched'))
+      })
+
+    groups.append({
+      'group_id': int(group.get('groupId')) if group.get('groupId') else None,
+      'group_name': group.get('groupName'),
+      'group_year': group.get('groupYear'),
+      'release_type': group.get('releaseType'),
+      'torrents': mapped_torrents
+    })
+
+  return {
+    'artist': {
+      'id': int(results.get('id')) if results.get('id') else None,
+      'name': results.get('name'),
+      'image': results.get('image')
+    },
+    'groups': groups
+  }
+
 
 # Routes
 @app.route("/login", methods=['GET', 'POST'])
@@ -115,9 +157,20 @@ def group_info():
 def settings_path():
   output = {'message':None,'class':None}
   if request.method == 'POST':
-    output = settings.update(request.form)
-    wat.bust_handle_cache()
+    if request.form.get('setting') == 'api_key':
+      output = {'class': 'alert-error', 'message': 'api key is read-only. use regenerate.'}
+    else:
+      output = settings.update(request.form)
+      wat.bust_handle_cache()
   return render_template('settings.html', settings=settings.get_all(), message=output['message'], message_class=output['class'], userinfo=database.userinfo())
+
+
+@app.route('/settings/regenerate_api_key', methods=['POST'])
+@login_required
+def regenerate_api_key_path():
+  regenerate_api_key()
+  flash('API Key Regenerated.', 'alert-success')
+  return redirect('/settings')
 
 @app.route("/snatches")
 @login_required
@@ -152,6 +205,106 @@ def refresh_userinfo():
     print('Failed to refresh user info: ' + str(e))
 
   return redirect(request.referrer or '/')
+
+# api
+@app.route('/api/v1/artists/search')
+@api_key_required
+def api_artist_search():
+  query = request.args.get('q', '').strip()
+  if not query:
+    return jsonify({'error': 'missing query', 'details': {'q': 'required'}}), 400
+
+  try:
+    results = wat.get_artist(query)
+  except Exception as e:
+    return jsonify({'error': 'upstream failure', 'details': {'message': str(e)}}), 502
+
+  if results == 'no data' or not results:
+    return jsonify({'error': 'artist not found', 'details': {'q': query}}), 404
+
+  payload = map_artist_results_for_api(results)
+  payload['query'] = query
+  return jsonify(payload)
+
+
+@app.route('/api/v1/downloads', methods=['POST'])
+@api_key_required
+def api_download_create():
+  data = request.get_json(silent=True) or {}
+
+  required = ['torrent_id', 'artist', 'album', 'display_title', 'media', 'format', 'encoding']
+  missing = [field for field in required if data.get(field) in [None, '']]
+  if missing:
+    return jsonify({'error': 'invalid request', 'details': {'missing': missing}}), 400
+
+  torrent_id = str(data['torrent_id'])
+  artist = str(data['artist'])
+  album = str(data['album'])
+
+  if torrent.exists(torrent_id, artist, album):
+    return jsonify({'error': 'already queued', 'details': {'torrent_id': torrent_id}}), 409
+
+  queue_data = {
+    'id': torrent_id,
+    'artist': artist,
+    'album': album,
+    'displayTitle': str(data['display_title']),
+    'media': str(data['media']),
+    'format': str(data['format']),
+    'encoding': str(data['encoding'])
+  }
+
+  try:
+    torrent.queue(queue_data)
+  except Exception as e:
+    return jsonify({'error': 'failed to queue download', 'details': {'message': str(e)}}), 500
+
+  return jsonify({'status': 'queued', 'torrent_id': torrent_id}), 202
+
+
+@app.route('/api/v1/downloads')
+@api_key_required
+def api_download_list():
+  status = request.args.get('status')
+  limit_raw = request.args.get('limit', '50')
+
+  try:
+    limit = int(limit_raw)
+  except ValueError:
+    return jsonify({'error': 'invalid request', 'details': {'limit': 'must be an integer'}}), 400
+
+  if limit < 1:
+    return jsonify({'error': 'invalid request', 'details': {'limit': 'must be >= 1'}}), 400
+
+  if limit > 500:
+    limit = 500
+
+  if status not in [None, 'queued', 'downloaded']:
+    return jsonify({'error': 'invalid request', 'details': {'status': 'must be queued or downloaded'}}), 400
+
+  rows = torrent.get_all()
+  items = []
+  for row in rows:
+    downloaded = bool(row['downloaded'])
+    if status == 'queued' and downloaded:
+      continue
+    if status == 'downloaded' and not downloaded:
+      continue
+
+    items.append({
+      'torrent_id': row['id'],
+      'artist': row['artist'],
+      'album': row['album'],
+      'release': row['release'],
+      'quality': row['quality'],
+      'added': row['added'],
+      'downloaded': downloaded
+    })
+
+    if len(items) >= limit:
+      break
+
+  return jsonify({'items': items})
 
 # Support relative links from artist/album descriptions
 @app.route('/artist.php')
