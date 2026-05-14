@@ -93,8 +93,14 @@ def artist():
 @app.route("/want", methods=['POST'])
 @login_required
 def want():
+  torrent_id = request.form.get('torrent_id') or json.loads(request.form.get('data', '{}')).get('id')
+  if not torrent_id:
+    return "<button class='button' disabled>Missing id</button>"
+  info = wat.get_torrent_info(torrent_id)
+  if not info:
+    return "<button class='button' disabled>Not found</button>"
   try:
-    torrent.queue(json.loads(request.form['data']))
+    torrent.queue(info)
   except DuplicateError:
     pass
   return "<button class='button' disabled>Snatched!</button>"
@@ -183,30 +189,23 @@ def api_artist_search():
 @api_key_required
 def api_download_create():
   data = request.get_json(silent=True) or {}
+  torrent_id = data.get('torrent_id')
 
-  required = ['torrent_id', 'artist', 'album', 'display_title', 'media', 'format', 'encoding']
-  missing = [field for field in required if data.get(field) in [None, '']]
-  if missing:
-    return jsonify({'error': 'invalid request', 'details': {'missing': missing}}), 400
+  if not torrent_id:
+    return jsonify({'error': 'invalid request', 'details': {'missing': ['torrent_id']}}), 400
 
-  queue_data = {
-    'id': str(data['torrent_id']),
-    'artist': str(data['artist']),
-    'album': str(data['album']),
-    'displayTitle': str(data['display_title']),
-    'media': str(data['media']),
-    'format': str(data['format']),
-    'encoding': str(data['encoding'])
-  }
+  info = wat.get_torrent_info(torrent_id)
+  if not info:
+    return jsonify({'error': 'torrent not found', 'details': {'torrent_id': torrent_id}}), 404
 
   try:
-    torrent.queue(queue_data)
+    torrent.queue(info)
   except DuplicateError:
-    return jsonify({'error': 'already queued', 'details': {'torrent_id': queue_data['id']}}), 409
+    return jsonify({'error': 'already queued', 'details': {'torrent_id': str(torrent_id)}}), 409
   except Exception as e:
     return jsonify({'error': 'failed to queue download', 'details': {'message': str(e)}}), 500
 
-  return jsonify({'status': 'queued', 'torrent_id': queue_data['id']}), 202
+  return jsonify({'status': 'queued', 'torrent_id': str(torrent_id)}), 202
 
 
 @app.route('/api/v1/downloads')

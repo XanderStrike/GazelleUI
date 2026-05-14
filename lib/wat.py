@@ -5,11 +5,11 @@ from . import database as database
 from .whatapi.whatapi import RequestException, LoginException
 from requests.utils import cookiejar_from_dict
 
-import json
 import time
 
 apihandle = None
 cache = {}
+torrent_index = {}  # torrent_id -> enriched torrent dict
 CACHE_DURATION = 24 * 60 * 60  # 24 hours in seconds
 
 
@@ -44,8 +44,9 @@ def bust_handle_cache():
   apihandle = None
 
 def bust_response_cache():
-  global cache
+  global cache, torrent_index
   cache = {}
+  torrent_index = {}
 
 def is_cache_valid(cache_key):
   if cache_key not in cache:
@@ -118,6 +119,28 @@ def refresh_user_info():
   total_tokens = gift_tokens + merit_tokens
   database.update("update settings set value_2 = '" + str(total_tokens) + "' where key = 'use_tokens'")
 
+# Lookup
+def get_torrent_info(torrent_id):
+  """Look up enriched torrent data by ID from cache, or fetch from tracker."""
+  tid = str(torrent_id)
+  if tid in torrent_index:
+    return torrent_index[tid]
+
+  # Fall back to tracker API
+  try:
+    result = handle().request('torrent', id=tid)['response']['torrent']
+    group = handle().request('torrentgroup', id=result.get('group', {}).get('id'))['response']['group']
+    # Enrich to match handle_artist_results format
+    result['artist'] = group.get('artist', '')
+    result['album'] = group.get('name', '')
+    make_artist_title(group, result)
+    result['size'] = human_readable(result.get('size', 0))
+    result['alreadySnatched'] = result.get('alreadySnatched', 0)
+    torrent_index[tid] = result
+    return result
+  except Exception:
+    return None
+
 # Massaging
 def handle_artist_results(info):
   snatched_torrents = []
@@ -135,7 +158,9 @@ def handle_artist_results(info):
 
       torrent['artist'] = info['name']
       torrent['album'] = group['groupName']
-      torrent['json'] = json.dumps(torrent)
+
+      # Index by torrent_id for lookup
+      torrent_index[str(torrent.get('id'))] = torrent
 
   return info
 

@@ -12,18 +12,12 @@ curl -s \
 
 ## queue download
 
+Only requires the torrent id — the server looks up the rest from its cache (or fetches from the tracker).
+
 ```bash
 curl -s -X POST \
   -H "authorization: bearer $GAZELLEUI_API_KEY" \
   -H "content-type: application/json" \
-  -d '{
-    "torrent_id": 123,
-    "artist": "Boards of Canada",
-    "album": "Music Has the Right to Children",
-    "display_title": "1998 / warp",
-    "media": "CD",
-    "format": "FLAC",
-    "encoding": "Lossless"
-  }' \
+  -d '{"torrent_id": 123}' \
   "http://localhost:2020/api/v1/downloads"
 ```

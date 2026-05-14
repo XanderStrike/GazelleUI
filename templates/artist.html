@@ -74,7 +74,7 @@
                   {% if torrent.alreadySnatched == 1 %}
                     <button class="button" disabled>Snatched!</button>
                   {% else %}
-                    <a href="/want" class="js-download button" torrentInfo="{{ torrent.json }}">Download</a>
+                    <a href="/want" class="js-download button" torrentId="{{ torrent.id }}">Download</a>
                   {% endif %}
                 </td>
               </tr>

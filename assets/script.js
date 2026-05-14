@@ -34,7 +34,7 @@ document.querySelectorAll('.js-download').forEach(elem => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: 'data=' + encodeURIComponent(this.getAttribute('torrentInfo'))
+      body: 'torrent_id=' + encodeURIComponent(this.getAttribute('torrentId'))
     })
     .then(response => response.text())
     .then(data => {
