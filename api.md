@@ -21,3 +21,15 @@ curl -s -X POST \
   -d '{"torrent_id": 123}' \
   "http://localhost:2020/api/v1/downloads"
 ```
+
+## List Downloads
+
+```bash
+curl -s \
+  -H "authorization: bearer $GAZELLEUI_API_KEY" \
+  "http://localhost:2020/api/v1/downloads?status=queued&limit=10"
+```
+
+Query params:
+- `status` — optional, `queued` or `downloaded`
+- `limit` — optional, max 500, default 50
