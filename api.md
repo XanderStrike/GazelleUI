@@ -1,8 +1,8 @@
-# api
+# API
 
 set/get api key in settings ui, then call with bearer auth.
 
-## artist search
+## Artist Search
 
 ```bash
 curl -s \
@@ -10,7 +10,7 @@ curl -s \
   "http://localhost:2020/api/v1/artists/search?q=boards%20of%20canada"
 ```
 
-## queue download
+## Queue Download
 
 Only requires the torrent id — the server looks up the rest from its cache (or fetches from the tracker).
 

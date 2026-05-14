@@ -21,14 +21,13 @@ services:
     volumes:
       - ./config:/app/config
       - ./torrents:/torrents
+    user: "1000:1000"
     environment:
       - PYTHONUNBUFFERED=1
     restart: unless-stopped
 ```
 
 * Set the watchfolder to a directory watched by your torrent client
-* PGID and PUID can be found by running `id` in a terminal
-* Timezone is your timezone
 * Configure the port by setting `2020:2020` to `<your port>:2020`
 
 See [docker-compose.yml](docker-compose.yml) for an example running with a companion transmission.
@@ -48,9 +47,9 @@ Set up the prerequisites and run:
 
 Then visit `<ip-address>:2020` to set it up!
 
-### api
+### API
 
-see [api.md](api.md).
+See [api.md](api.md).
 
 ### License
 
