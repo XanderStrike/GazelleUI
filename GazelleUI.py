@@ -143,6 +143,16 @@ def subscriptions():
   subs = database.subscriptions()
   return render_template('subscriptions.html', subs=subs, userinfo=database.userinfo(), settings=settings.get_all(), mappings=autofetch.mappings)
 
+@app.route('/refresh_userinfo')
+@login_required
+def refresh_userinfo():
+  try:
+    wat.refresh_user_info()
+  except Exception as e:
+    print('Failed to refresh user info: ' + str(e))
+
+  return redirect(request.referrer or '/')
+
 # Support relative links from artist/album descriptions
 @app.route('/artist.php')
 @login_required
