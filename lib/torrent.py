@@ -6,11 +6,21 @@ import json
 
 import urllib.request, urllib.error, urllib.parse
 
+class DuplicateError(Exception):
+    pass
+
 def queue(data):
+  torrent_id = str(data['id'])
+  artist = data['artist']
+  album = data['album']
+
+  if exists(torrent_id, artist, album):
+    raise DuplicateError(f'torrent {torrent_id} already queued')
+
   query = 'insert into torrents(id, artist, album, release, quality, added, downloaded) values ("' + \
-    str(data['id']) + '", "' + \
-    data['artist'] + '", "' + \
-    data['album'] + '", "' + \
+    torrent_id + '", "' + \
+    artist + '", "' + \
+    album + '", "' + \
     data['displayTitle'] + '", "' + \
     data['media'] + " / " + data['format'] + " " + \
     data['encoding'] + '", ' + \
@@ -56,8 +66,16 @@ def download_torrent(torrent_id):
 def get_recent():
   return database.row_fetch('select * from torrents order by added desc limit 10')
 
-def get_all():
-  return database.row_fetch('select * from torrents order by added desc')
+def get_all(status=None, limit=None):
+  query = 'select * from torrents'
+  if status == 'queued':
+    query += ' where downloaded = 0'
+  elif status == 'downloaded':
+    query += ' where downloaded = 1'
+  query += ' order by added desc'
+  if limit:
+    query += f' limit {int(limit)}'
+  return database.row_fetch(query)
 
 def get_ids_for_artist(artist):
   return database.fetch('select id from torrents where artist = "' + artist + '"')

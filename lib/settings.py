@@ -1,4 +1,14 @@
+import os
+import secrets
 from . import database as database
+
+def get_or_create(key, generator_fn):
+    current = get(key)
+    if current and current[1]:
+        return current[1]
+    value = generator_fn()
+    update({'setting': key, 'value_1': value, 'value_2': ''})
+    return value
 
 def update(params):
   try:

@@ -25,18 +25,14 @@ def needs_auth():
     return creds[1] != None and creds[1] != ''
 
 
-def get_or_create_api_key():
-    current = settings.get('api_key')[1]
-    if current:
-        return current
-
-    return regenerate_api_key()
-
-
 def regenerate_api_key():
     api_key = secrets.token_urlsafe(32)
     settings.update({'setting': 'api_key', 'value_1': api_key, 'value_2': ''})
     return api_key
+
+
+def get_or_create_api_key():
+    return settings.get_or_create('api_key', regenerate_api_key)
 
 
 def api_key_required(f):

@@ -14,6 +14,7 @@ import lib.settings as settings
 import lib.wat as wat
 import lib.jobs as jobs
 import lib.torrent as torrent
+from lib.torrent import DuplicateError
 import lib.autofetch as autofetch
 
 import json
@@ -42,60 +43,10 @@ scheduler.start()
 database.init()
 
 # Generate or retrieve secret key from database
-def get_or_create_secret_key():
-    try:
-        result = settings.get('secret_key')
-        if result and result[1]:
-            return result[1].encode('utf-8')
-    except:
-        pass
-
-    secret_key = os.urandom(24).hex()
-    settings.update({'setting': 'secret_key', 'value_1': secret_key, 'value_2': ''})
-    return secret_key.encode('utf-8')
-
-app.secret_key = get_or_create_secret_key()
+app.secret_key = settings.get_or_create('secret_key', lambda: os.urandom(24).hex()).encode('utf-8')
 
 # Generate api key on first run
 get_or_create_api_key()
-
-
-def map_artist_results_for_api(results):
-  groups = []
-
-  for group in results.get('torrentgroup', []):
-    mapped_torrents = []
-    for t in group.get('torrent', []):
-      mapped_torrents.append({
-        'torrent_id': int(t.get('id')) if t.get('id') else None,
-        'media': t.get('media'),
-        'format': t.get('format'),
-        'encoding': t.get('encoding'),
-        'size': t.get('size'),
-        'snatched': t.get('snatched'),
-        'seeders': t.get('seeders'),
-        'leechers': t.get('leechers'),
-        'display_title': t.get('displayTitle'),
-        'time': t.get('time'),
-        'already_snatched': bool(t.get('alreadySnatched'))
-      })
-
-    groups.append({
-      'group_id': int(group.get('groupId')) if group.get('groupId') else None,
-      'group_name': group.get('groupName'),
-      'group_year': group.get('groupYear'),
-      'release_type': group.get('releaseType'),
-      'torrents': mapped_torrents
-    })
-
-  return {
-    'artist': {
-      'id': int(results.get('id')) if results.get('id') else None,
-      'name': results.get('name'),
-      'image': results.get('image')
-    },
-    'groups': groups
-  }
 
 
 # Routes
@@ -142,7 +93,10 @@ def artist():
 @app.route("/want", methods=['POST'])
 @login_required
 def want():
-  torrent.queue(json.loads(request.form['data']))
+  try:
+    torrent.queue(json.loads(request.form['data']))
+  except DuplicateError:
+    pass
   return "<button class='button' disabled>Snatched!</button>"
 
 @app.route("/group_info")
@@ -222,9 +176,7 @@ def api_artist_search():
   if results == 'no data' or not results:
     return jsonify({'error': 'artist not found', 'details': {'q': query}}), 404
 
-  payload = map_artist_results_for_api(results)
-  payload['query'] = query
-  return jsonify(payload)
+  return jsonify({'query': query, **results})
 
 
 @app.route('/api/v1/downloads', methods=['POST'])
@@ -237,17 +189,10 @@ def api_download_create():
   if missing:
     return jsonify({'error': 'invalid request', 'details': {'missing': missing}}), 400
 
-  torrent_id = str(data['torrent_id'])
-  artist = str(data['artist'])
-  album = str(data['album'])
-
-  if torrent.exists(torrent_id, artist, album):
-    return jsonify({'error': 'already queued', 'details': {'torrent_id': torrent_id}}), 409
-
   queue_data = {
-    'id': torrent_id,
-    'artist': artist,
-    'album': album,
+    'id': str(data['torrent_id']),
+    'artist': str(data['artist']),
+    'album': str(data['album']),
     'displayTitle': str(data['display_title']),
     'media': str(data['media']),
     'format': str(data['format']),
@@ -256,10 +201,12 @@ def api_download_create():
 
   try:
     torrent.queue(queue_data)
+  except DuplicateError:
+    return jsonify({'error': 'already queued', 'details': {'torrent_id': queue_data['id']}}), 409
   except Exception as e:
     return jsonify({'error': 'failed to queue download', 'details': {'message': str(e)}}), 500
 
-  return jsonify({'status': 'queued', 'torrent_id': torrent_id}), 202
+  return jsonify({'status': 'queued', 'torrent_id': queue_data['id']}), 202
 
 
 @app.route('/api/v1/downloads')
@@ -282,27 +229,16 @@ def api_download_list():
   if status not in [None, 'queued', 'downloaded']:
     return jsonify({'error': 'invalid request', 'details': {'status': 'must be queued or downloaded'}}), 400
 
-  rows = torrent.get_all()
-  items = []
-  for row in rows:
-    downloaded = bool(row['downloaded'])
-    if status == 'queued' and downloaded:
-      continue
-    if status == 'downloaded' and not downloaded:
-      continue
-
-    items.append({
-      'torrent_id': row['id'],
-      'artist': row['artist'],
-      'album': row['album'],
-      'release': row['release'],
-      'quality': row['quality'],
-      'added': row['added'],
-      'downloaded': downloaded
-    })
-
-    if len(items) >= limit:
-      break
+  rows = torrent.get_all(status=status, limit=limit)
+  items = [{
+    'torrent_id': row['id'],
+    'artist': row['artist'],
+    'album': row['album'],
+    'release': row['release'],
+    'quality': row['quality'],
+    'added': row['added'],
+    'downloaded': bool(row['downloaded'])
+  } for row in rows]
 
   return jsonify({'items': items})
 
