@@ -4,6 +4,7 @@
 import os
 import sys
 from datetime import timedelta
+from urllib.parse import urlparse
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response, session, flash
 from flask_apscheduler import APScheduler
@@ -251,6 +252,28 @@ def artist_redirect():
   return redirect('/')
 
 # Serve Static Assets
+@app.route('/image_proxy')
+@login_required
+def image_proxy():
+  # redacted.sh serves images only to authenticated sessions, so we proxy
+  # images through the server.
+  url = request.args.get('url')
+  if not url:
+    return Response('missing url', status=400)
+  parsed = urlparse(url)
+  if parsed.scheme not in ('http', 'https') or not parsed.netloc:
+    return Response('invalid url', status=400)
+  try:
+    handle = wat.handle()
+  except Exception as e:
+    return Response(f'auth error: {e}', status=502)
+  try:
+    upstream = handle.session.get(url, timeout=15, stream=True)
+    upstream.raise_for_status()
+  except Exception as e:
+    return Response(f'upstream error: {e}', status=502)
+  return Response(upstream.raw, content_type=upstream.headers.get('Content-Type', 'image/jpeg'))
+
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
   return send_from_directory('assets', filename)
