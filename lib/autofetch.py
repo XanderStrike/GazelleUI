@@ -26,14 +26,15 @@ mappings = Enum(
 )
 
 def create_subscription(data):
-  query = 'insert into subscriptions(search_type, term, quality, release_type, release_media) values (' + \
-          '"' + data['search_type'] + '", ' + \
-          '"' + data['term'] + '", ' + \
-          '"' + data['quality'] + '", ' + \
-          '"' + data['release_type'] + '", ' + \
-          '"' + data['release_media'] + '")'
+  query = 'insert into subscriptions(search_type, term, quality, release_type, release_media) values (?, ?, ?, ?, ?)'
 
-  database.update(query)
+  database.update(query, (
+    data['search_type'],
+    data['term'],
+    data['quality'],
+    data['release_type'],
+    data['release_media'],
+  ))
 
 def enqueue(data):
   if not torrent.exists(data['id'], data['artist'], data['album']):

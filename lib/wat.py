@@ -101,23 +101,35 @@ def refresh_user_info():
   info = handle().request('index')['response']
 
   # Update main user info
-  database.update("update user set username = '" + info['username'] + "', "
-                  "upload = '" + human_readable(info['userstats']['uploaded']) + "', "
-                  "download = '" + human_readable(info['userstats']['downloaded']) + "', "
-                  "ratio = '" + str(info['userstats']['ratio'] )+ "', "
-                  "requiredratio = '" + str(info['userstats']['requiredratio']) + "', "
-                  "class = '" + str(info['userstats']['class']) + "', "
-                  "notifications = '" + str(info['notifications']['notifications']) + "', "
-                  "newSubscriptions = '" + str(info['notifications']['newSubscriptions']) + "', "
-                  "messages = '" + str(info['notifications']['messages']) + "', "
-                  "newBlog = '" + str(info['notifications']['newBlog']) + "'"
+  database.update("update user set username = ?, "
+                  "upload = ?, "
+                  "download = ?, "
+                  "ratio = ?, "
+                  "requiredratio = ?, "
+                  "class = ?, "
+                  "notifications = ?, "
+                  "newSubscriptions = ?, "
+                  "messages = ?, "
+                  "newBlog = ?",
+                  (
+                    info['username'],
+                    human_readable(info['userstats']['uploaded']),
+                    human_readable(info['userstats']['downloaded']),
+                    str(info['userstats']['ratio']),
+                    str(info['userstats']['requiredratio']),
+                    str(info['userstats']['class']),
+                    str(info['notifications']['notifications']),
+                    str(info['notifications']['newSubscriptions']),
+                    str(info['notifications']['messages']),
+                    str(info['notifications']['newBlog']),
+                  )
     )
 
   # Update token count
   gift_tokens = info.get('giftTokens', 0)
   merit_tokens = info.get('meritTokens', 0)
   total_tokens = gift_tokens + merit_tokens
-  database.update("update settings set value_2 = '" + str(total_tokens) + "' where key = 'use_tokens'")
+  database.update("update settings set value_2 = ? where key = 'use_tokens'", (str(total_tokens),))
 
 # Lookup
 def get_torrent_info(torrent_id):

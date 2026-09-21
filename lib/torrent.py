@@ -17,20 +17,19 @@ def queue(data):
   if exists(torrent_id, artist, album):
     raise DuplicateError(f'torrent {torrent_id} already queued')
 
-  query = 'insert into torrents(id, artist, album, release, quality, added, downloaded) values ("' + \
-    torrent_id + '", "' + \
-    artist + '", "' + \
-    album + '", "' + \
-    data['displayTitle'] + '", "' + \
-    data['media'] + " / " + data['format'] + " " + \
-    data['encoding'] + '", ' + \
-    'datetime("now"), 0)'
+  query = 'insert into torrents(id, artist, album, release, quality, added, downloaded) values (?, ?, ?, ?, ?, datetime("now"), 0)'
 
-  database.update(query)
+  database.update(query, (
+    torrent_id,
+    artist,
+    album,
+    data['displayTitle'],
+    data['media'] + " / " + data['format'] + " " + data['encoding'],
+  ))
 
 def exists(id, artist, album):
-  query = 'select id from torrents where id = "' + str(id) + '" or artist = "' + artist + '" and album = "' + album + '"'
-  return database.fetch(query) != []
+  query = 'select id from torrents where id = ? or (artist = ? and album = ?)'
+  return database.fetch(query, (str(id), artist, album)) != []
 
 def download_all():
   torrents = database.row_fetch('select * from torrents where downloaded = 0')
@@ -61,7 +60,7 @@ def download_torrent(torrent_id):
   output.close()
 
   print("Downloaded " + torrent_id + ".torrent")
-  database.update('update torrents set downloaded = 1 where id = "' + torrent_id + '"')
+  database.update('update torrents set downloaded = 1 where id = ?', (torrent_id,))
 
 def get_recent():
   return database.row_fetch('select * from torrents order by added desc limit 10')
@@ -78,7 +77,7 @@ def get_all(status=None, limit=None):
   return database.row_fetch(query)
 
 def get_ids_for_artist(artist):
-  return database.fetch('select id from torrents where artist = "' + artist + '"')
+  return database.fetch('select id from torrents where artist = ?', (artist,))
 
 def get_all_ids():
   return database.fetch('select id from torrents')

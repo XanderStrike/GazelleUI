@@ -68,7 +68,7 @@ def init():
             continue
 
   for setting in DEFAULT_SETTINGS:
-    con.cursor().execute("insert into settings(key, value_1, value_2) select '" + "', '".join(setting) + "' where not exists(select 1 from settings where key = '" + setting[0] + "')")
+    con.cursor().execute("insert into settings(key, value_1, value_2) select ?, ?, ? where not exists(select 1 from settings where key = ?)", tuple(setting) + (setting[0],))
 
   con.commit()
 
@@ -77,20 +77,20 @@ def init():
 
   con.commit()
 
-def update(query):
+def update(query, params=()):
   con = lite.connect(DB)
-  con.cursor().execute(query)
+  con.cursor().execute(query, params)
   con.commit()
   return True
 
-def fetch(query):
+def fetch(query, params=()):
   cur = lite.connect(DB).cursor()
-  return cur.execute(query).fetchall()
+  return cur.execute(query, params).fetchall()
 
-def row_fetch(query):
+def row_fetch(query, params=()):
   con = lite.connect(DB)
   con.row_factory = lite.Row
-  return con.cursor().execute(query).fetchall()
+  return con.cursor().execute(query, params).fetchall()
 
 def userinfo():
   return fetch('select * from user')[0]
@@ -111,4 +111,4 @@ def subscriptions():
   return h
 
 def delete_sub(id):
-  update("delete from subscriptions where id = " + str(id))
+  update("delete from subscriptions where id = ?", (id,))

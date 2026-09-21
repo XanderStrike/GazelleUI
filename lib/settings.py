@@ -15,7 +15,8 @@ def get_or_create(key, generator_fn):
 
 def update(params):
   try:
-    database.update('insert or replace into settings(key, value_1, value_2) values ("' + params['setting'] + '", "' + params['value_1'] + '", "' + params['value_2'] + '")')
+    database.update('insert or replace into settings(key, value_1, value_2) values (?, ?, ?)',
+                    (params['setting'], params['value_1'], params['value_2']))
     return {'class': 'alert-success', 'message': 'Settings updated successfully.'}
   except:
     print("Error updating settings")
@@ -29,4 +30,4 @@ def get_all():
   return s_dict
 
 def get(key):
-  return database.fetch('select * from settings where key = "' + key + '"')[0]
+  return database.fetch('select * from settings where key = ?', (key,))[0]
