@@ -34,7 +34,11 @@ def exists(id, artist, album):
 def download_all():
   torrents = database.row_fetch('select * from torrents where downloaded = 0')
   for t in torrents:
-    download_torrent(t[0])
+    try:
+      download_torrent(t[0])
+    except Exception as e:
+      print('Failed to download ' + t[0] + '.torrent: ' + str(e))
+      continue
     print('Downloaded ' + t[0] + '.torrent -- ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4])
     discord.send('Downloaded ' + t[1] + ' - ' + t[2] + ' / ' + t[3] + ' / ' + t[4])
 

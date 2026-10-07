@@ -29,7 +29,13 @@ def download_torrents():
 
 def update_user():
   print('Updating user info')
-  wat.refresh_user_info()
+  try:
+    wat.refresh_user_info()
+  except wat.UpstreamError as e:
+    print('Skipping user info update: ' + e.message)
 
 def autofetch():
-  af.run()
+  try:
+    af.run()
+  except wat.UpstreamError as e:
+    print('Skipping autofetch: ' + e.message)

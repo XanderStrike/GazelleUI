@@ -49,7 +49,11 @@ def fetch_new_torrents(sub):
     ', and release media ' + str(sub['release_media']))
 
   if sub['search_type'] == 'artist':
-    data = wat.get_artist(sub['term'])
+    try:
+      data = wat.get_artist(sub['term'])
+    except wat.UpstreamError as e:
+      print('Skipping subscription: ' + e.message)
+      return
 
     if data == 'no data':
       print('Nothing found')

@@ -74,7 +74,7 @@ document.querySelectorAll('.js-more-info').forEach(elem => {
       infoContainer.style.display = 'block';
       
       fetch(this.getAttribute('href'))
-        .then(response => response.text())
+        .then(response => response.ok ? response.text() : Promise.reject(response.status))
         .then(data => {
           infoContainer.innerHTML = data;
           // Add event listeners to any new expandable images

@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="alert alert-{{ kind|default('error') }}">
+    <h4>{{ title }}</h4>
+    <p>{{ message }}</p>
+  </div>
+  {% if not hide_retry %}
+    <p><a href="" onclick="location.reload(); return false;" class="button">Retry</a></p>
+  {% endif %}
+{% endblock %}

@@ -7,6 +7,8 @@ from datetime import timedelta
 from urllib.parse import urlparse
 
 from flask import Flask, request, jsonify, render_template, redirect, send_from_directory, Response, session, flash
+from markupsafe import escape
+from werkzeug.exceptions import HTTPException
 from flask_apscheduler import APScheduler
 
 from lib.auth import login_required, check_auth, needs_auth, api_key_required, get_or_create_api_key, regenerate_api_key
@@ -16,9 +18,11 @@ import lib.wat as wat
 import lib.jobs as jobs
 import lib.torrent as torrent
 from lib.torrent import DuplicateError
+from lib.wat import UpstreamError
 import lib.autofetch as autofetch
 
 import json
+import traceback
 
 # Configure Scheduler
 class Config(object):
@@ -48,6 +52,26 @@ app.secret_key = settings.get_or_create('secret_key', lambda: os.urandom(24).hex
 
 # Generate api key on first run
 get_or_create_api_key()
+
+
+# Error handling
+@app.errorhandler(UpstreamError)
+def handle_upstream_error(e):
+  if request.path.startswith('/api/'):
+    return jsonify({'error': 'upstream failure', 'details': {'message': e.message}}), 502
+  return render_template('error.html', title=e.title, message=e.message), 502
+
+
+@app.errorhandler(Exception)
+def handle_unexpected_error(e):
+  # Let Flask/HTTPException (404s etc.) behave normally
+  if isinstance(e, HTTPException):
+    return e
+  traceback.print_exc()
+  message = 'Something went wrong handling this request. Check the logs for details.'
+  if request.path.startswith('/api/'):
+    return jsonify({'error': 'internal error', 'details': {'message': str(e)}}), 500
+  return render_template('error.html', title='Something went wrong', message=message), 500
 
 
 # Routes
@@ -88,6 +112,10 @@ def index():
 def artist():
   query = request.args['q']
   results = wat.get_artist(query)
+  if results == 'no data' or not results:
+    return render_template('error.html', title='Artist not found',
+                           message=f'No results for "{query}". Check the spelling and try again.',
+                           kind='warning'), 404
   return render_template('artist.html', results=results, userinfo=database.userinfo(), settings=settings.get_all(), mappings=autofetch.mappings)
 
 
@@ -97,7 +125,10 @@ def want():
   torrent_id = request.form.get('torrent_id') or json.loads(request.form.get('data', '{}')).get('id')
   if not torrent_id:
     return "<button class='button' disabled>Missing id</button>"
-  info = wat.get_torrent_info(torrent_id)
+  try:
+    info = wat.get_torrent_info(torrent_id)
+  except UpstreamError as e:
+    return f"<button class='button' disabled title=\"{escape(e.message)}\">Tracker unreachable</button>"
   if not info:
     return "<button class='button' disabled>Not found</button>"
   try:
@@ -111,6 +142,10 @@ def want():
 def group_info():
   group_id = request.args['id']
   results = wat.get_group(group_id)
+  if results == 'no data' or not results:
+    return render_template('error.html', title='Release not found',
+                           message='No info available for this release.',
+                           kind='warning', hide_retry=True), 404
   return render_template('group_info.html', group_info=results)
 
 @app.route("/settings", methods=['GET', 'POST'])
@@ -162,8 +197,11 @@ def subscriptions():
 def refresh_userinfo():
   try:
     wat.refresh_user_info()
+  except UpstreamError as e:
+    flash(e.message, 'alert-error')
   except Exception as e:
     print('Failed to refresh user info: ' + str(e))
+    flash('Failed to refresh user info. Check the logs for details.', 'alert-error')
 
   return redirect(request.referrer or '/')
 
@@ -177,8 +215,8 @@ def api_artist_search():
 
   try:
     results = wat.get_artist(query)
-  except Exception as e:
-    return jsonify({'error': 'upstream failure', 'details': {'message': str(e)}}), 502
+  except UpstreamError as e:
+    return jsonify({'error': 'upstream failure', 'details': {'message': e.message}}), 502
 
   if results == 'no data' or not results:
     return jsonify({'error': 'artist not found', 'details': {'q': query}}), 404
@@ -195,7 +233,10 @@ def api_download_create():
   if not torrent_id:
     return jsonify({'error': 'invalid request', 'details': {'missing': ['torrent_id']}}), 400
 
-  info = wat.get_torrent_info(torrent_id)
+  try:
+    info = wat.get_torrent_info(torrent_id)
+  except UpstreamError as e:
+    return jsonify({'error': 'upstream failure', 'details': {'message': e.message}}), 502
   if not info:
     return jsonify({'error': 'torrent not found', 'details': {'torrent_id': torrent_id}}), 404
 

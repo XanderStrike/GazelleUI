@@ -21,6 +21,11 @@ class RequestException(Exception):
     pass
 
 
+class ConnectionException(RequestException):
+    '''Raised when the tracker can't be reached at all (DNS, timeout, refused, no route).'''
+    pass
+
+
 class WhatAPI:
     def __init__(self, config_file=None, username=None, password=None, cookies=None, domain=None):
         self.session = requests.Session()
@@ -59,7 +64,10 @@ class WhatAPI:
                 'keeplogged': 1,
                 'login': 'Login'
         }
-        r = self.session.post(loginpage, data=data, allow_redirects=False)
+        try:
+            r = self.session.post(loginpage, data=data, allow_redirects=False)
+        except requests.exceptions.RequestException as e:
+            raise ConnectionException(str(e))
         if r.status_code != 302:
             raise LoginException
         self._auth()
@@ -91,7 +99,10 @@ class WhatAPI:
             params['auth'] = self.authkey
         params.update(kwargs)
 
-        r = self.session.get(ajaxpage, params=params, allow_redirects=False)
+        try:
+            r = self.session.get(ajaxpage, params=params, allow_redirects=False)
+        except requests.exceptions.RequestException as e:
+            raise ConnectionException(str(e))
         time.sleep(2)
         try:
             json_response = r.json()
